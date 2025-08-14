@@ -1,28 +1,32 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { Provider, useDispatch } from 'react-redux';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { store } from './src/redux/store.jsx';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor } from './src/redux/store.jsx';
+import { NavigationContainer } from '@react-navigation/native';
+import SplashScreen from './src/Screens/SplashScreen.jsx';
+import Routes from './src/routes/Routes.jsx';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+export default function App() {
+  const [isSplashScreenVisible, setSplashScreenVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashScreenVisible(false);
+    }, 3000); 
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+          {isSplashScreenVisible ? <SplashScreen /> : <Routes />}
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default App;

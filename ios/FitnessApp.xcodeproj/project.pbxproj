@@ -11,6 +11,18 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		BF964B80FB914E07959E9CE6 /* Fontspring-DEMO-integralcf-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D414B4CA6CF429E83D70777 /* Fontspring-DEMO-integralcf-bold.otf */; };
+		26D92B7158C140C8941B5BE2 /* Fontspring-DEMO-integralcf-boldoblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = C97FE5AF61BA44E4BCFAB25C /* Fontspring-DEMO-integralcf-boldoblique.otf */; };
+		0B95753264E94A44BA06FDA6 /* Fontspring-DEMO-integralcf-demibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DBF9E366411844E1A5FB9A9D /* Fontspring-DEMO-integralcf-demibold.otf */; };
+		737A1136477842B4BC2B061C /* Fontspring-DEMO-integralcf-demiboldoblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7FA837C185494091899402FF /* Fontspring-DEMO-integralcf-demiboldoblique.otf */; };
+		B207A78E2FF249A99A816B09 /* Fontspring-DEMO-integralcf-extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = A65213F534994FFB88D48CB6 /* Fontspring-DEMO-integralcf-extrabold.otf */; };
+		83F2A46341B148C1BD086037 /* Fontspring-DEMO-integralcf-extraboldoblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7BA918B114334FD18910F000 /* Fontspring-DEMO-integralcf-extraboldoblique.otf */; };
+		8CC03A9F75A04328B2D2E48B /* Fontspring-DEMO-integralcf-heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0295067C719946F19C8CE6A9 /* Fontspring-DEMO-integralcf-heavy.otf */; };
+		1615207B6C764C8C9BE69E92 /* Fontspring-DEMO-integralcf-heavyoblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = 327F938637AC4D329743701D /* Fontspring-DEMO-integralcf-heavyoblique.otf */; };
+		98500522459144DC92358147 /* Fontspring-DEMO-integralcf-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F54AB3791F34F4AB47E7FF1 /* Fontspring-DEMO-integralcf-medium.otf */; };
+		DB3D40E3E46D4E5DAC6F5EDD /* Fontspring-DEMO-integralcf-mediumoblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = E510A3D43C4B4A94A52E8305 /* Fontspring-DEMO-integralcf-mediumoblique.otf */; };
+		18B974A3BB1747F084AE5C06 /* Fontspring-DEMO-integralcf-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 72B7ABD4BF8549DE9F126822 /* Fontspring-DEMO-integralcf-regular.otf */; };
+		048D72F74CDE415F84ED952E /* Fontspring-DEMO-integralcf-regularoblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDE31EF04FAE44C3A98D47DD /* Fontspring-DEMO-integralcf-regularoblique.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +47,18 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = FitnessApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FitnessApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		4D414B4CA6CF429E83D70777 /* Fontspring-DEMO-integralcf-bold.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-bold.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C97FE5AF61BA44E4BCFAB25C /* Fontspring-DEMO-integralcf-boldoblique.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-boldoblique.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-boldoblique.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DBF9E366411844E1A5FB9A9D /* Fontspring-DEMO-integralcf-demibold.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-demibold.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-demibold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7FA837C185494091899402FF /* Fontspring-DEMO-integralcf-demiboldoblique.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-demiboldoblique.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-demiboldoblique.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A65213F534994FFB88D48CB6 /* Fontspring-DEMO-integralcf-extrabold.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-extrabold.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-extrabold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7BA918B114334FD18910F000 /* Fontspring-DEMO-integralcf-extraboldoblique.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-extraboldoblique.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-extraboldoblique.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0295067C719946F19C8CE6A9 /* Fontspring-DEMO-integralcf-heavy.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-heavy.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-heavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		327F938637AC4D329743701D /* Fontspring-DEMO-integralcf-heavyoblique.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-heavyoblique.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-heavyoblique.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0F54AB3791F34F4AB47E7FF1 /* Fontspring-DEMO-integralcf-medium.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-medium.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E510A3D43C4B4A94A52E8305 /* Fontspring-DEMO-integralcf-mediumoblique.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-mediumoblique.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-mediumoblique.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		72B7ABD4BF8549DE9F126822 /* Fontspring-DEMO-integralcf-regular.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-regular.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BDE31EF04FAE44C3A98D47DD /* Fontspring-DEMO-integralcf-regularoblique.otf */ = {isa = PBXFileReference; name = "Fontspring-DEMO-integralcf-regularoblique.otf"; path = "../assets/fonts/Fontspring-DEMO-integralcf-regularoblique.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +117,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				B2CB2C4C55E0475A9E7A6BB3 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -115,6 +140,26 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		B2CB2C4C55E0475A9E7A6BB3 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				4D414B4CA6CF429E83D70777 /* Fontspring-DEMO-integralcf-bold.otf */,
+				C97FE5AF61BA44E4BCFAB25C /* Fontspring-DEMO-integralcf-boldoblique.otf */,
+				DBF9E366411844E1A5FB9A9D /* Fontspring-DEMO-integralcf-demibold.otf */,
+				7FA837C185494091899402FF /* Fontspring-DEMO-integralcf-demiboldoblique.otf */,
+				A65213F534994FFB88D48CB6 /* Fontspring-DEMO-integralcf-extrabold.otf */,
+				7BA918B114334FD18910F000 /* Fontspring-DEMO-integralcf-extraboldoblique.otf */,
+				0295067C719946F19C8CE6A9 /* Fontspring-DEMO-integralcf-heavy.otf */,
+				327F938637AC4D329743701D /* Fontspring-DEMO-integralcf-heavyoblique.otf */,
+				0F54AB3791F34F4AB47E7FF1 /* Fontspring-DEMO-integralcf-medium.otf */,
+				E510A3D43C4B4A94A52E8305 /* Fontspring-DEMO-integralcf-mediumoblique.otf */,
+				72B7ABD4BF8549DE9F126822 /* Fontspring-DEMO-integralcf-regular.otf */,
+				BDE31EF04FAE44C3A98D47DD /* Fontspring-DEMO-integralcf-regularoblique.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -185,6 +230,18 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				BF964B80FB914E07959E9CE6 /* Fontspring-DEMO-integralcf-bold.otf in Resources */,
+				26D92B7158C140C8941B5BE2 /* Fontspring-DEMO-integralcf-boldoblique.otf in Resources */,
+				0B95753264E94A44BA06FDA6 /* Fontspring-DEMO-integralcf-demibold.otf in Resources */,
+				737A1136477842B4BC2B061C /* Fontspring-DEMO-integralcf-demiboldoblique.otf in Resources */,
+				B207A78E2FF249A99A816B09 /* Fontspring-DEMO-integralcf-extrabold.otf in Resources */,
+				83F2A46341B148C1BD086037 /* Fontspring-DEMO-integralcf-extraboldoblique.otf in Resources */,
+				8CC03A9F75A04328B2D2E48B /* Fontspring-DEMO-integralcf-heavy.otf in Resources */,
+				1615207B6C764C8C9BE69E92 /* Fontspring-DEMO-integralcf-heavyoblique.otf in Resources */,
+				98500522459144DC92358147 /* Fontspring-DEMO-integralcf-medium.otf in Resources */,
+				DB3D40E3E46D4E5DAC6F5EDD /* Fontspring-DEMO-integralcf-mediumoblique.otf in Resources */,
+				18B974A3BB1747F084AE5C06 /* Fontspring-DEMO-integralcf-regular.otf in Resources */,
+				048D72F74CDE415F84ED952E /* Fontspring-DEMO-integralcf-regularoblique.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,53 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-bold.otf",
+      "sha1": "37c21faf913e38b1e56870226f98f18021c1033e"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-boldoblique.otf",
+      "sha1": "354cc4a740c0e30cdf3a67c4beb1d2e4003876fb"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-demibold.otf",
+      "sha1": "3aa17bcf79cdc9eb41c879b2d9ae8b864b25dba6"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-demiboldoblique.otf",
+      "sha1": "5fa1fe85700bd17de563746344a94af88454e188"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-extrabold.otf",
+      "sha1": "e6713ba08bddbc36a2097722f54af490a93c638f"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-extraboldoblique.otf",
+      "sha1": "837acda5c99cb2bf8c7aa7e8bb0705074b813be1"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-heavy.otf",
+      "sha1": "1ec508968168ed3c67e139aa30b8d759eb24da29"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-heavyoblique.otf",
+      "sha1": "ae6a456daf72b31e9f3c335b25b5d8a96487fd7b"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-medium.otf",
+      "sha1": "a019703b888b54b4cd27bbb3a986cca294588cad"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-mediumoblique.otf",
+      "sha1": "3c529b6ccbb6c5dc66f2c9b2a9e3dc828a31b42c"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-regular.otf",
+      "sha1": "521d715516b804b8ed9e20c4b91602ca06debcaa"
+    },
+    {
+      "path": "assets/fonts/Fontspring-DEMO-integralcf-regularoblique.otf",
+      "sha1": "e05f071c2648fdc0df2a035f6f0fa3b3fa7be33e"
+    }
+  ]
+}
