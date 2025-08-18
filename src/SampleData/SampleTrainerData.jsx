@@ -1,4 +1,4 @@
-import { WorkoutDetailImage } from '../utils';
+import { FitnessTrainer1, FitnessTrainer2, FitnessTrainer3, FitnessTrainer4, FitnessTrainer5, FitnessTrainer6, WorkoutDetailImage } from '../utils';
 
 export const sampleTrainers = [
   {
@@ -7,7 +7,7 @@ export const sampleTrainers = [
     specialty: 'High Intensity Training',
     experience: '5 years',
     rating: 4.8,
-    image: WorkoutDetailImage,
+    image: FitnessTrainer1,
   },
   {
     id: '2',
@@ -15,7 +15,7 @@ export const sampleTrainers = [
     specialty: 'Functional Strength',
     experience: '4 years',
     rating: 4.6,
-    image: WorkoutDetailImage,
+    image: FitnessTrainer6,
   },
   {
     id: '3',
@@ -23,7 +23,7 @@ export const sampleTrainers = [
     specialty: 'Strength Training',
     experience: '6 years',
     rating: 4.5,
-    image: WorkoutDetailImage,
+    image: FitnessTrainer2,
   },
   {
     id: '4',
@@ -31,7 +31,7 @@ export const sampleTrainers = [
     specialty: 'High Intensity Training',
     experience: '2 years',
     rating: 4.9,
-    image: WorkoutDetailImage,
+    image: FitnessTrainer5,
   },
   {
     id: '5',
@@ -39,7 +39,7 @@ export const sampleTrainers = [
     specialty: 'Functional Strength',
     experience: '8 years',
     rating: 4.8,
-    image: WorkoutDetailImage,
+    image: FitnessTrainer4,
   },
   {
     id: '6',
@@ -47,6 +47,6 @@ export const sampleTrainers = [
     specialty: 'High Intensity Training',
     experience: '9 years',
     rating: 4.2,
-    image: WorkoutDetailImage,
+    image: FitnessTrainer3,
   },
 ];

@@ -2,15 +2,11 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
   Switch,
 } from 'react-native';
 import { useState } from 'react';
 import BackButton from '../../Components/Buttons/BackButton';
 import { normal16 } from '../../utils/Style';
-import { OffRadioButton, OnRadioButton } from '../../utils';
 
 const NotificationSettingScreen = () => {
   const [workoutReminders, setWorkoutReminders] = useState(false);
@@ -30,7 +26,7 @@ const NotificationSettingScreen = () => {
             value={workoutReminders}
             onValueChange={setWorkoutReminders}
             trackColor={{ false: '#767577', true: '#D0FD3E' }}
-            thumbColor={workoutReminders ? '#000000' : '#f4f3f4'}
+            thumbColor={workoutReminders ? '#ffffff' : '#f4f3f4'}
           />
         </View>
 
@@ -40,7 +36,7 @@ const NotificationSettingScreen = () => {
             value={programNotification}
             onValueChange={setProgramNotification}
             trackColor={{ false: '#767577', true: '#D0FD3E' }}
-            thumbColor={programNotification ? '#000000' : '#f4f3f4'}
+            thumbColor={programNotification ? '#ffffff' : '#f4f3f4'}
           />
         </View>
       </View>

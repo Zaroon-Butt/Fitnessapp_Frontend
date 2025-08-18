@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../redux/store';
 import { setIsLogin, setIsUsername } from '../../redux/Reducers/userReducer';
-
 import {
   View,
   Text,
@@ -107,7 +106,7 @@ export default function SignIn() {
       {!isInputFocused && (
         <View style={styles.textContainer}>
           <Text style={[medium24, { color: '#FFFFFF' }]}>WELCOME BACK</Text>
-          <Text style={[medium24, { color: '#FFFFFF' }]}>ZAROON</Text>
+          <Text style={[medium24, { color: '#FFFFFF' }]}>{store.getState().user.isUsername}</Text>
         </View>
       )}
 
@@ -141,11 +140,7 @@ export default function SignIn() {
             />
             <TouchableOpacity>
               <Text
-                onPress={() =>
-                  navigation
-                    .getParent()
-                    ?.navigate('AuthStack', { screen: 'ForgetPassword' })
-                }
+                onPress={() => navigation.navigate('ForgetPassword')}
                 style={{ color: '#D0FD3E', marginTop: 10, textAlign: 'right' }}
               >
                 Forget Password?

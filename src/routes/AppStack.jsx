@@ -22,6 +22,8 @@ import NotificationSettingScreen from '../Screens/ProfileScreens/NotificationSet
 import LanguageSettingScreen from '../Screens/ProfileScreens/LanguageSettingScreen';
 import WebviewScreen from '../Screens/HomeScreens/WebviewScreen';
 import SubscriptionPayment from '../Screens/PaymentScreens/SubscriptionPaymentScreen';
+import ContactUsScreen from '../Screens/ProfileScreens/ContactUsScreen';
+import BmiScreen from '../Screens/ProfileScreens/BmiScreen';
 import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
@@ -55,7 +57,9 @@ const AppStack = () => {
       <Stack.Screen name="NotificationSettingScreen" component={NotificationSettingScreen} />
       <Stack.Screen name="LanguageSettingScreen" component={LanguageSettingScreen} />
       <Stack.Screen name="WebviewScreen" component={WebviewScreen} />
+      <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
       <Stack.Screen name="SubscriptionPayment" component={SubscriptionPayment} />
+      <Stack.Screen name="BmiScreen" component={BmiScreen} />
     </Stack.Navigator>
   );
 };

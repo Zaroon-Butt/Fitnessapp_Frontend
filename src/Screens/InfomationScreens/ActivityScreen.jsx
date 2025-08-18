@@ -2,108 +2,83 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
-  ScrollView,
-  Dimensions,
+  Animated,
   TouchableOpacity,
   StyleSheet,
-  Animated,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { normal16, regular, regular9 } from '../../utils/Style';
+import { normal, regular9 } from '../../utils/Style';
 import NextButton from '../../Components/Buttons/NextButton';
 import BackButton from '../../Components/Buttons/BackButton';
 
-const { height: screenHeight } = Dimensions.get('window');
+const ITEM_HEIGHT = 65;
 
 const ActivityScreen = ({ onChange, initialActivity = 'Beginner' }) => {
   const [selectedActivity, setSelectedActivity] = useState(initialActivity);
+  const [containerHeight, setContainerHeight] = useState(0);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const itemHeight = 65;
+  const scrollY = useRef(new Animated.Value(0)).current;
 
-  const Activity = [
-    'Rookie',
-    'Beginner',
-    'Intermediate',
-    'Advanced',
-    'True Beast',
-  ];
+  const activities = ['Rookie', 'Beginner', 'Intermediate', 'Advanced', 'True Beast'];
+
+  const scrollToActivity = (activity, animated = true) => {
+    const index = activities.indexOf(activity);
+    if (index !== -1 && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: index * ITEM_HEIGHT, animated });
+    }
+  };
 
   useEffect(() => {
-    // Initialize scroll position after component mounts
-    setTimeout(() => {
-      const initialIndex = Activity.indexOf(selectedActivity);
-      if (scrollViewRef.current && initialIndex !== -1) {
-        scrollViewRef.current.scrollTo({
-          y: initialIndex * itemHeight,
-          animated: false,
-        });
-      }
-    }, 100);
-  }, []);
-
-  const handleScroll = event => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    const index = Math.round(offsetY / itemHeight);
-
-    // Ensure index is within bounds
-    if (index >= 0 && index < Activity.length) {
-      const newActivity = Activity[index];
-
-      if (newActivity && newActivity !== selectedActivity) {
-        setSelectedActivity(newActivity);
-
-        Animated.sequence([
-          Animated.timing(fadeAnim, {
-            toValue: 0.7,
-            duration: 100,
-            useNativeDriver: true,
-          }),
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 100,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      }
+    if (containerHeight > 0) {
+      requestAnimationFrame(() => scrollToActivity(initialActivity, false));
     }
-  };
-
-  const scrollToActivity = activity => {
-    const index = Activity.indexOf(activity);
-    if (index !== -1 && scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({
-        y: index * itemHeight,
-        animated: true,
-      });
-    }
-  };
+  }, [containerHeight, initialActivity]);
 
   const handleNext = () => {
-    onChange && onChange(selectedActivity);
+    onChange?.(selectedActivity);
   };
 
   const handleBack = () => {
     navigation.goBack();
   };
 
+  const handleMomentumScrollEnd = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const index = Math.round(offsetY / ITEM_HEIGHT);
+    const newActivity = activities[index];
+    if (newActivity && newActivity !== selectedActivity) {
+      setSelectedActivity(newActivity);
+    }
+  };
+
   const renderActivityItem = (activity, index) => {
-    const isSelected = activity === selectedActivity;
-    const distance = Math.abs(
-      Activity.indexOf(activity) - Activity.indexOf(selectedActivity),
-    );
-    const opacity = Math.max(0.2, 1 - distance * 0.3);
-    const scale = isSelected ? 1 : Math.max(0.5, 1 - distance * 0.2);
-    const translateY = distance === 1 ? -8 : distance === 2 ? -16 : 0;
+    const inputRange = [
+      (index - 2) * ITEM_HEIGHT,
+      (index - 1) * ITEM_HEIGHT,
+      index * ITEM_HEIGHT,
+      (index + 1) * ITEM_HEIGHT,
+      (index + 2) * ITEM_HEIGHT,
+    ];
+
+    const scale = scrollY.interpolate({
+      inputRange,
+      outputRange: [0.6, 0.8, 1, 0.8, 0.6],
+      extrapolate: 'clamp',
+    });
+
+    const opacity = scrollY.interpolate({
+      inputRange,
+      outputRange: [0.3, 0.6, 1, 0.6, 0.3],
+      extrapolate: 'clamp',
+    });
 
     return (
       <TouchableOpacity
         key={activity}
-        style={[styles.activityItem, { height: itemHeight }]}
+        style={[styles.activityItem, { height: ITEM_HEIGHT }]}
         onPress={() => {
           setSelectedActivity(activity);
-
           scrollToActivity(activity);
         }}
         activeOpacity={0.7}
@@ -111,54 +86,70 @@ const ActivityScreen = ({ onChange, initialActivity = 'Beginner' }) => {
         <Animated.View
           style={[
             styles.activityTextContainer,
-            {
-              opacity,
-              transform: [{ scale }, { translateY }],
-            },
+            { transform: [{ scale }], opacity },
           ]}
         >
           <Text
             style={[
               styles.activityText,
-              isSelected && styles.selectedactivityText,
+              activity === selectedActivity && styles.selectedActivityText,
             ]}
           >
             {activity}
           </Text>
-          {isSelected && <View style={styles.selectionIndicator} />}
         </Animated.View>
       </TouchableOpacity>
     );
   };
 
+  const spacerHeight = Math.max(0, containerHeight / 2 - ITEM_HEIGHT / 2);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={normal16}>YOUR REGULAR PHYSICAL</Text>
-        <Text style={normal16}> ACTIVITY LEVEL ?</Text>
-        <Text style={[regular9, {marginTop: 10}]}>
+        <Text style={normal}>YOUR REGULAR PHYSICAL</Text>
+        <Text style={normal}>ACTIVITY LEVEL?</Text>
+        <Text style={[regular9, { marginTop: 10 }]}>
           THIS HELPS US CREATE YOUR PERSONALIZED PLAN
         </Text>
       </View>
 
-      <View style={styles.spinnerContainer}>
-        <View style={styles.selectionOverlay} />
+      <View
+        style={styles.spinnerContainer}
+        onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}
+      >
+        {containerHeight > 0 && (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.selectionOverlay,
+              {
+                top: containerHeight / 2 - ITEM_HEIGHT / 2,
+                height: ITEM_HEIGHT,
+              },
+            ]}
+          />
+        )}
 
-        <ScrollView
+        <Animated.ScrollView
           ref={scrollViewRef}
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-          snapToInterval={itemHeight}
+          snapToInterval={ITEM_HEIGHT}
           decelerationRate="fast"
-          contentOffset={{ y: Activity.indexOf(selectedActivity) * itemHeight }}
-        >
-          {Activity.map((activity, index) =>
-            renderActivityItem(activity, index),
+          scrollEventThrottle={16}
+          bounces={false}
+          overScrollMode="never"
+          onMomentumScrollEnd={handleMomentumScrollEnd}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: true }
           )}
-        </ScrollView>
+        >
+          <View style={{ height: spacerHeight }} />
+          {activities.map((activity, index) => renderActivityItem(activity, index))}
+          <View style={{ height: spacerHeight }} />
+        </Animated.ScrollView>
       </View>
 
       <View style={styles.bottomNav}>
@@ -183,29 +174,21 @@ const styles = StyleSheet.create({
   },
   spinnerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'relative',
+    width: '100%',
   },
   selectionOverlay: {
     position: 'absolute',
-    top: '50%',
     left: 90,
     right: 90,
-    height: 60,
-    marginTop: -55,
     borderTopWidth: 3,
     borderBottomWidth: 3,
     borderColor: '#d0fd3e',
-    zIndex: 1,
+    zIndex: 10,
   },
   scrollView: {
-    height: 300,
+    flex: 1,
     width: '100%',
-  },
-  scrollContent: {
-    paddingVertical: 175,
-    paddingBottom: 240,
   },
   activityItem: {
     justifyContent: 'center',
@@ -215,19 +198,17 @@ const styles = StyleSheet.create({
   activityTextContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative',
   },
   activityText: {
-    fontSize: 30,
+    fontSize: 36,
     fontWeight: '300',
     color: '#505050',
     textAlign: 'center',
   },
-  selectedactivityText: {
-    color: '#ffffff',
+  selectedActivityText: {
+    color: '#fff',
     fontWeight: '400',
   },
-
   bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-between',

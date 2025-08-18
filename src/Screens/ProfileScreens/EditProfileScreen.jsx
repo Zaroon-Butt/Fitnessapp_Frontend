@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -13,10 +14,17 @@ import { normal } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import { ProfilePicture } from '../../utils';
+import { setIsUsername } from '../../redux/Reducers/userReducer';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+
 
 const EditProfileScreen = () => {
-  const [cardHolderName, setCardHolderName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
+  const username = useSelector(state => state.user.isUsername);
+  const [name, setName] = useState(username || '');
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -27,10 +35,7 @@ const EditProfileScreen = () => {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.bankCardContainer}>
-          <Image
-            source={ProfilePicture}
-            style={styles.profileImage}
-          />
+          <Image source={ProfilePicture} style={styles.profileImage} />
         </View>
 
         <View style={styles.form}>
@@ -38,23 +43,20 @@ const EditProfileScreen = () => {
             style={styles.input}
             placeholder="Name"
             placeholderTextColor="#888"
-            value={cardHolderName}
-            onChangeText={setCardHolderName}
+            value={name}
+            onChangeText={setName}
             maxLength={30}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#888"
-            value={cardNumber}
-            onChangeText={setCardNumber}
-            keyboardType="email-address"
-            maxLength={50}
           />
         </View>
 
         <View style={styles.buttonWrapper}>
-          <BigButton text="Done" />
+          <BigButton
+            text="Done"
+            onPress={() => {
+              dispatch(setIsUsername(name));
+              navigation.navigate('BottomNavbar');
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -95,7 +97,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   input: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 3,
+    borderTopWidth: 3,
     borderBottomColor: '#2C2C2E',
     paddingHorizontal: 16,
     paddingVertical: 14,

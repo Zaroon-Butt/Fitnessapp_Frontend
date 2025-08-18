@@ -25,7 +25,7 @@ const OtpScreen = () => {
       // Allow clearing the input
       newOtp[index] = '';
       setOtp(newOtp);
-      a;
+    
     } else if (/^\d$/.test(text)) {
       // Only allow single digits
       newOtp[index] = text;
@@ -36,7 +36,6 @@ const OtpScreen = () => {
         inputRefs.current[index + 1].focus();
       }
     }
-    // If text is not a digit and not empty, we simply ignore it (don't update state)
   };
 
   const handleBack = () => {
@@ -103,7 +102,7 @@ const OtpScreen = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.verifyButton}>
+        <TouchableOpacity style={styles.verifyButton} onPress={() => navigation.navigate('SignIn')}>
           <Text style={styles.verifyButtonText}>Verify</Text>
         </TouchableOpacity>
       </View>

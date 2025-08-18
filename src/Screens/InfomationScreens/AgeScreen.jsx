@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
   Animated,
-  Dimensions,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -13,26 +12,35 @@ import NextButton from '../../Components/Buttons/NextButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import { RF } from '../../utils/responsive';
 
-const { height: screenHeight } = Dimensions.get('window');
-const itemHeight = 80;
+const itemHeight = 80; // Height of each age row (keep in sync with styles / design)
 
 const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
   const [selectedAge, setSelectedAge] = useState(initialAge);
+  const [containerHeight, setContainerHeight] = useState(0); // dynamic height of the spinner area
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
-  const scrollY = useRef(new Animated.Value((initialAge - 13) * itemHeight)).current;
+  const scrollY = useRef(
+    new Animated.Value((initialAge - 13) * itemHeight),
+  ).current;
 
   const ages = Array.from({ length: 68 }, (_, i) => i + 13);
 
-  const scrollToAge = (age) => {
+  const scrollToAge = (age, animated = true) => {
     const index = ages.indexOf(age);
     if (index !== -1 && scrollViewRef.current) {
-      scrollViewRef.current.getNode().scrollTo({
+      scrollViewRef.current.scrollTo({
         y: index * itemHeight,
-        animated: true,
+        animated,
       });
     }
   };
+
+  useEffect(() => {
+    if (containerHeight > 0) {
+      // Defer slightly to ensure ScrollView laid out
+      requestAnimationFrame(() => scrollToAge(initialAge, false));
+    }
+  }, [containerHeight, initialAge]);
 
   const handleNext = () => {
     onAgeChange && onAgeChange(selectedAge);
@@ -42,11 +50,11 @@ const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
     navigation.goBack();
   };
 
-  const handleMomentumScrollEnd = (event) => {
+  const handleMomentumScrollEnd = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const index = Math.round(offsetY / itemHeight);
     const newAge = ages[index];
-    if (newAge !== selectedAge) {
+    if (newAge !== undefined && newAge !== selectedAge) {
       setSelectedAge(newAge);
     }
   };
@@ -91,7 +99,12 @@ const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
             },
           ]}
         >
-          <Text style={[styles.ageText, age === selectedAge && styles.selectedAgeText]}>
+          <Text
+            style={[
+              styles.ageText,
+              age === selectedAge && styles.selectedAgeText,
+            ]}
+          >
             {age}
           </Text>
           {age === selectedAge && <View style={styles.selectionIndicator} />}
@@ -99,6 +112,8 @@ const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
       </TouchableOpacity>
     );
   };
+
+  const spacerHeight = Math.max(0, containerHeight / 2 - itemHeight / 2);
 
   return (
     <View style={styles.container}>
@@ -109,27 +124,43 @@ const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
         </Text>
       </View>
 
-      <View style={styles.spinnerContainer}>
-        <View style={styles.selectionOverlay} />
+      <View
+        style={styles.spinnerContainer}
+        onLayout={e => setContainerHeight(e.nativeEvent.layout.height)}
+      >
+        {containerHeight > 0 && (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.selectionOverlay,
+              {
+                top: containerHeight / 2 - itemHeight / 2,
+                height: itemHeight,
+              },
+            ]}
+          />
+        )}
 
         <Animated.ScrollView
           ref={scrollViewRef}
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           snapToInterval={itemHeight}
           decelerationRate="fast"
           scrollEventThrottle={16}
           bounces={false}
           overScrollMode="never"
-          contentOffset={{ y: (initialAge - 13) * itemHeight }}
           onMomentumScrollEnd={handleMomentumScrollEnd}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: true }
+            { useNativeDriver: true },
           )}
         >
+          {/* Top spacer */}
+          <View style={{ height: spacerHeight }} />
           {ages.map((age, index) => renderAgeItem(age, index))}
+          {/* Bottom spacer */}
+          <View style={{ height: spacerHeight }} />
         </Animated.ScrollView>
       </View>
 
@@ -155,29 +186,20 @@ const styles = StyleSheet.create({
   },
   spinnerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'relative',
+    width: '100%',
   },
   selectionOverlay: {
     position: 'absolute',
-    top: '50%',
     left: 90,
     right: 90,
-    height: 70,
-    marginTop: -68,
     borderTopWidth: 3,
     borderBottomWidth: 3,
     borderColor: '#d0fd3e',
-    zIndex: 1,
   },
   scrollView: {
-    height: 400,
+    flex: 1,
     width: '100%',
-  },
-  scrollContent: {
-    paddingVertical: 165,
-    paddingBottom: 250,
   },
   ageItem: {
     justifyContent: 'center',
@@ -206,7 +228,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 40,
   },
-
 });
 
 export default AgeScreen;

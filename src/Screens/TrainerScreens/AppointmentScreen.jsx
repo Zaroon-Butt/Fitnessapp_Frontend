@@ -18,10 +18,12 @@ import { WorkoutDetailImage, Next, BackButtonIcon } from '../../utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Appointment = () => {
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState('09:30 AM');
   const navigation = useNavigation();
   const route = useRoute();
+  const today = new Date();
 
   // Get trainer data from navigation params, fallback to default data
   const trainerData = route.params?.trainer || {
@@ -31,13 +33,12 @@ const Appointment = () => {
     rating: 4.8,
     image: WorkoutDetailImage,
   };
-const [today] = useState(new Date());
-
-
 
   const onDateChange = date => {
     setSelectedDate(date);
   };
+
+  
 
   const generateTimeSlots = () => {
     const slots = [];
@@ -147,8 +148,8 @@ const [today] = useState(new Date());
           text="Send"
           onPress={() => {
             navigation.navigate('Payment', {
-              selectedDate: selectedDate,
-              selectedTime: selectedTime,
+              selectedDate,
+              selectedTime,
               appointmentDetails: {
                 date: selectedDate
                   ? selectedDate.toString().substring(0, 15)
@@ -158,6 +159,7 @@ const [today] = useState(new Date());
                   name: trainerData.name,
                   specialty: trainerData.specialty,
                   rating: trainerData.rating,
+                  image: trainerData.image, 
                 },
               },
             });

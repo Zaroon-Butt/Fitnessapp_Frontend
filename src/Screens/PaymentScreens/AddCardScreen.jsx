@@ -60,7 +60,7 @@ const AddCard = () => {
             placeholder="Card Number"
             placeholderTextColor="#888"
             value={cardNumber}
-            onChangeText={setCardNumber}
+            onChangeText={text => setCardNumber(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
             maxLength={16}
           />
@@ -70,7 +70,8 @@ const AddCard = () => {
               placeholder="Expiry MM/YY"
               placeholderTextColor="#888"
               value={expiryDate}
-              onChangeText={setExpiryDate}
+              onChangeText={text => setExpiryDate(text.replace(/[^0-9]/g, ''))}
+              keyboardType='numeric'
               maxLength={4}
             />
             <TextInput
@@ -78,7 +79,7 @@ const AddCard = () => {
               placeholder="CVC"
               placeholderTextColor="#888"
               value={cvc}
-              onChangeText={setCvc}
+              onChangeText={text => setCvc(text.replace(/[^0-9]/g, ''))}
               keyboardType="numeric"
               maxLength={3}
             />

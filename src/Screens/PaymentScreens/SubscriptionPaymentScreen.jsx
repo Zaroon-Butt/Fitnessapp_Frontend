@@ -83,6 +83,7 @@ const SubscriptionPayment = () => {
           text="Confirm"
           onPress={() => {
             if (cards.length === 0) return Alert.alert('Please Add a Card');
+            Alert.alert('Payment Successful');
             navigation.navigate('BottomNavbar', {
               screen: 'SubscriptionPayment',
               params: {

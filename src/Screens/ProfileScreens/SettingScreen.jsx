@@ -20,13 +20,22 @@ const SettingScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
+          onPress={() => navigation.navigate('BmiScreen')}
+        >
+          <Text style={styles.buttonText}>Calculate Your BMI</Text>
+          <NextArrowButton
+            onPress={() => navigation.navigate('BmiScreen')}
+          />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
+          style={styles.button}
           onPress={() => navigation.navigate('UnitSettingScreen')}
         >
           <Text style={styles.buttonText}>Unit of Measure</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('UnitSettingScreen')}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('NotificationSettingScreen')}
@@ -36,7 +45,7 @@ const SettingScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('NotificationSettingScreen')}
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('LanguageSettingScreen')}
         >
@@ -44,14 +53,14 @@ const SettingScreen = ({ navigation }) => {
           <NextArrowButton
             onPress={() => navigation.navigate('LanguageSettingScreen')}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('SettingScreen')}
+          onPress={() => navigation.navigate('ContactUsScreen')}
         >
           <Text style={styles.buttonText}>Contact Us</Text>
           <NextArrowButton
-            onPress={() => navigation.navigate('SettingScreen')}
+            onPress={() => navigation.navigate('ContactUsScreen')}
           />
         </TouchableOpacity>
       </View>

@@ -36,4 +36,9 @@ export const categories1 = require('../images/categories1.jpeg');
 export const categories2 = require('../images/categories2.jpeg');
 export const categories3 = require('../images/categories3.jpeg');
 export const categories4 = require('../images/categories4.jpg');
-
+export const FitnessTrainer1 = require('../images/FitnessTrainer1.jpg');
+export const FitnessTrainer2 = require('../images/FitnessTrainer2.jpg');
+export const FitnessTrainer3 = require('../images/FitnessTrainer3.jpg'); 
+export const FitnessTrainer4 = require('../images/FitnessTrainer4.jpg');
+export const FitnessTrainer5 = require('../images/FitnessTrainer5.jpeg');
+export const FitnessTrainer6 = require('../images/FitnessTrainer6.jpeg');

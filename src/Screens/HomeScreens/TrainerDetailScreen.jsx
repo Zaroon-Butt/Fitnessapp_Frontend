@@ -17,7 +17,6 @@ const TrainerProfile = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  // Get trainer data from navigation params, fallback to default data
   const trainerData = route.params?.trainer || {
     name: 'Jennifer James',
     specialty: 'Functional Strength',
