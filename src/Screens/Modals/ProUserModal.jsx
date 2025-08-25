@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { WorkoutDetailImage } from '../../utils';
+import { medium, medium24, normal16, regular, regular16, regular9 } from '../../utils/Style';
+import RF from 'react-native-responsive-fontsize';
 
 const { width } = Dimensions.get('window');
 
@@ -69,11 +71,11 @@ const ProWorkoutModal = ({ visible, onCancel, onConfirm, workout }) => {
 
           {/* Buttons */}
           <TouchableOpacity style={styles.primaryButton} onPress={onConfirm}>
-            <Text style={styles.primaryButtonText}>Take Appointment ➤</Text>
+            <Text style={[regular16, { color: '#000' }]}>Take Appointment ➤</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onCancel}>
-            <Text style={styles.cancelText}>Cancel </Text>
+            <Text style={[regular16, { marginBottom: 20 }]}>Cancel </Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { ProfilePicture } from '../../utils';
 import BackButton from '../../Components/Buttons/BackButton';
-import { medium } from '../../utils/Style';
+import { medium, regular, regular16 } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, store } from '../../redux/store';
@@ -31,6 +31,7 @@ const ProfileScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
+        <Text style={[medium, { flex: 1, textAlign: 'center' }]}>Profile</Text>
       </View>
 
       <View style={styles.profileSection}>
@@ -63,7 +64,7 @@ const ProfileScreen = () => {
           style={styles.button}
           onPress={() => navigation.navigate('EditProfileScreen')}
         >
-          <Text style={styles.buttonText}>Edit Profile</Text>
+          <Text style={regular}>Edit Profile</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('EditProfileScreen')}
           />
@@ -72,7 +73,7 @@ const ProfileScreen = () => {
           style={styles.button}
           onPress={() => navigation.navigate('PolicyScreen')}
         >
-          <Text style={styles.buttonText}>Privacy Policy</Text>
+          <Text style={regular}>Privacy Policy</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('PolicyScreen')}
           />
@@ -81,7 +82,7 @@ const ProfileScreen = () => {
           style={styles.button}
           onPress={() => navigation.navigate('SettingScreen')}
         >
-          <Text style={styles.buttonText}>Settings</Text>
+          <Text style={regular}>Settings</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('SettingScreen')}
           />
@@ -90,7 +91,7 @@ const ProfileScreen = () => {
 
       {/* Sign Out */}
       <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-        <Text style={styles.signOutText}>Sign Out</Text>
+        <Text style={[regular, { color: 'red' }]}>Sign Out</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -104,6 +105,9 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   profileSection: {
     flexDirection: 'row',

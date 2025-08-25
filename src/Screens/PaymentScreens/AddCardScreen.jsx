@@ -71,7 +71,7 @@ const AddCard = () => {
               placeholderTextColor="#888"
               value={expiryDate}
               onChangeText={text => setExpiryDate(text.replace(/[^0-9]/g, ''))}
-              keyboardType='numeric'
+              keyboardType="numeric"
               maxLength={4}
             />
             <TextInput
@@ -99,7 +99,6 @@ const AddCard = () => {
 
         <View style={styles.buttonWrapper}>
           <BigButton
-            text="Done"
             onPress={() => {
               if (cardHolderName && cardNumber) {
                 const cardData = {
@@ -113,7 +112,9 @@ const AddCard = () => {
                 navigation.goBack();
               }
             }}
-          />
+          >
+            <Text style={styles.buttonText}>Done</Text>
+          </BigButton>
         </View>
       </ScrollView>
     </SafeAreaView>

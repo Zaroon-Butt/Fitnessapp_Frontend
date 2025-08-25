@@ -1,12 +1,13 @@
 import { View, Text, StyleSheet } from 'react-native';
 import NotificationBar from '../../Components/Navbar/NotificationBar';
+import { regular, regular16, regular9 } from '../../utils/Style';
 
 const NotificationScreen = () => {
   return (
     <View style={styles.container}>
       <NotificationBar />
-      <Text style={styles.title}>Notifications</Text>
-      <Text style={styles.subtitle}>No new notifications</Text>
+      <Text style={[regular16, { textAlign: 'center' }]}>Notifications</Text>
+      <Text style={[styles.subtitle, regular9]}>No new notifications</Text>
     </View>
   );
 };

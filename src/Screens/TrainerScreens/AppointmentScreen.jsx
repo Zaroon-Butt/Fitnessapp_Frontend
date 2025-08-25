@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import CalendarPicker from 'react-native-calendar-picker';
-import { normal } from '../../utils/Style';
+import { normal, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
@@ -145,7 +145,6 @@ const Appointment = () => {
 
       <View style={styles.sendButtonContainer}>
         <BigButton
-          text="Send"
           onPress={() => {
             navigation.navigate('Payment', {
               selectedDate,
@@ -164,7 +163,9 @@ const Appointment = () => {
               },
             });
           }}
-        />
+        >
+          <Text style={[regular16, { color: '#000' }]}>Send</Text>
+        </BigButton>
       </View>
     </SafeAreaView>
   );

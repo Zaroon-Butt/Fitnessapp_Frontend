@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Subscription } from '../../utils';
 
 const initialState = {
   isOnboarding: true,
@@ -6,6 +7,8 @@ const initialState = {
   isCard: false,
   cards: [],
   isUsername: [],
+  isPro: false,
+  isSubscription: false,
 };
 
 export const userReducer = createSlice({
@@ -31,6 +34,14 @@ export const userReducer = createSlice({
     addCard: (state, action) => {
       state.cards.push(action.payload);
       state.isCard = true;
+    },
+
+    setIsPro: (state, action) => {
+      state.isPro = action.payload;
+    },
+
+    setIsSubscription: (state, action) => {
+      state.isSubscription = action.payload;
     },
 
     updateCard: (state, action) => {
@@ -59,7 +70,10 @@ export const {
   updateCard,
   deleteCard,
   setIsUsername,
+  setIsPro,
   logout: logoutUser,
+  setIsSubscription
+  
 } = userReducer.actions;
 
 export default userReducer.reducer;

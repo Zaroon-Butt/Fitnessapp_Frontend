@@ -41,18 +41,19 @@ const medium24 = {
   color: '#FFFFFF',
 };
 
-
-
-
-
-
-
 const regular = {
   //400
   fontFamily: Regular,
   fontSize: RF(10),
   textAlign: 'center',
   lineHeight: RF(10),
+  color: '#FFFFFF',
+};
+const regular16 = {
+  //400
+  fontFamily: Regular,
+  fontSize: RF(16),
+  lineHeight: RF(16),
   color: '#FFFFFF',
 };
 const regular9 = {
@@ -70,4 +71,4 @@ const light = {
   color: '#FFFFFF',
 };
 
-export { heading, normal, regular, light, medium, regular9, normal16, medium24 };
+export { heading, normal, regular, light, medium, regular9, normal16, medium24 , regular16 };

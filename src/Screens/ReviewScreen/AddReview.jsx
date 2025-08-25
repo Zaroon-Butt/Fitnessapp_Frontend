@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import BackButton from "../../Components/Buttons/BackButton";
-import { normal, regular } from "../../utils/Style";
+import { normal, regular, regular16 } from "../../utils/Style";
 import BigButton from "../../Components/Buttons/BigButton";
 
 const WriteReview = () => {
@@ -75,7 +75,9 @@ const WriteReview = () => {
 
         {/* Send Button */}
         <View style={styles.sendButtonContainer}>
-          <BigButton text="Send" onPress={handleSendReview} />
+          <BigButton onPress={handleSendReview}>
+            <Text style={[regular16, { color: '#000' }]}>Send</Text>
+          </BigButton>
         </View>
       </ScrollView>
     </SafeAreaView>

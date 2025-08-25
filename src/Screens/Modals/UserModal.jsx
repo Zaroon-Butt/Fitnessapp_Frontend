@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { WorkoutDetailImage } from '../../utils';
+import { regular16 } from '../../utils/Style';
 
 const { width } = Dimensions.get('window');
 
@@ -34,19 +35,19 @@ const UserModal = ({ visible, onCancel, onConfirm, workout }) => {
 
           {/* Text Content */}
           <View style={styles.textContainer}>
-            <Text style={styles.title}>{workout.title}</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.title, ]}>{workout.title}</Text>
+            <Text style={[styles.subtitle]}>
               <Text style={styles.redLine}>|</Text> {workout.subtitle}
             </Text>
           </View>
 
           {/* Buttons */}
           <TouchableOpacity style={styles.primaryButton} onPress={onConfirm}>
-            <Text style={styles.primaryButtonText}>Be Premium</Text>
+            <Text style={[regular16, { color: '#000' }]}>Be Premium</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onCancel}>
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={[regular16, { marginBottom: 20 }]}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#D3FF25',
     marginTop: 5,
+    lineHeight: 24,
   },
   redLine: {
     color: 'red',

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { regular9 } from '../../utils/Style';
+import { regular, regular9 } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
 
 const WorkoutCategoriesBar = () => {
@@ -24,7 +24,8 @@ const WorkoutCategoriesBar = () => {
       >
         <Text
           style={[
-            styles.categoryText,
+            regular9,
+            { paddingVertical: 10, numberOfLines: 1 },
             isSelected ? styles.selectedText : styles.unselectedText,
           ]}
         >
@@ -48,22 +49,6 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-  seeAllText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#d0fd3e',
-  },
   buttonContainer: {
     flexDirection: 'row',
     borderRadius: 25,
@@ -81,12 +66,7 @@ const styles = StyleSheet.create({
   unselectedButton: {
     backgroundColor: 'transparent',
   },
-  categoryText: {
-    fontSize: 11,
-    paddingVertical: 8,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
+ 
   selectedText: {
     color: '#000000',
   },

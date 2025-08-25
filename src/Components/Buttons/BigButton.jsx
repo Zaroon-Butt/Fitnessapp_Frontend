@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const BigButton = ({ text, onPress }) => {
+const BigButton = ({ children, onPress }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonText}>{text}</Text>
+        {children}
       </TouchableOpacity>
     </View>
   );

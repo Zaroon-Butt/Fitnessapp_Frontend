@@ -7,14 +7,14 @@ import {
 } from 'react-native';
 import BackButton from '../../Components/Buttons/BackButton';
 import NextArrowButton from '../../Components/Buttons/NextArrowButton';
-import { normal16 } from '../../utils/Style';
+import { normal16, regular } from '../../utils/Style';
 
 const SettingScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
-        <Text style={[normal16, { marginLeft: 70 }]}>Settings</Text>
+        <Text style={[normal16, { marginLeft: 80 }]}>Settings</Text>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -22,7 +22,7 @@ const SettingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => navigation.navigate('BmiScreen')}
         >
-          <Text style={styles.buttonText}>Calculate Your BMI</Text>
+          <Text style={regular}>Calculate Your BMI</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('BmiScreen')}
           />
@@ -40,7 +40,7 @@ const SettingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => navigation.navigate('NotificationSettingScreen')}
         >
-          <Text style={styles.buttonText}>Notifications</Text>
+          <Text style={regular}>Notifications</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('NotificationSettingScreen')}
           />
@@ -58,7 +58,7 @@ const SettingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => navigation.navigate('ContactUsScreen')}
         >
-          <Text style={styles.buttonText}>Contact Us</Text>
+          <Text style={regular}>Contact Us</Text>
           <NextArrowButton
             onPress={() => navigation.navigate('ContactUsScreen')}
           />
@@ -94,11 +94,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 12,
     marginBottom: 12,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
   },
 });
 

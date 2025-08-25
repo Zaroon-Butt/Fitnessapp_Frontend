@@ -7,7 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 import BackButton from '../../Components/Buttons/BackButton';
-import BigButton from '../../Components/Buttons/BigButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
 import { medium } from '../../utils/Style';
 import { sampleTrainers } from '../../SampleData/SampleTrainerData';
@@ -15,24 +14,22 @@ import { useNavigation } from '@react-navigation/native';
 
 const ShowAllTrainers = () => {
   const navigation = useNavigation();
-
-  const handleStartWorkout = () => {
-    // Add navigation logic here when the workout screen is available
-    console.log('Start workout pressed');
-  };
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
-        <Text style={[medium, { marginLeft: 20 }]}>Fitness Trainers</Text>
+        <Text style={[medium, { flex: 1, textAlign: 'center' }]}>Fitness Trainers</Text>
       </View>
 
       <FlatList
         data={sampleTrainers}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={()=>navigation.navigate('TrainerDetail', { trainer: item })}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('TrainerDetail', { trainer: item })
+            }
+          >
             <TrainerDetailCard
               name={item.name}
               rating={item.rating}
@@ -46,8 +43,6 @@ const ShowAllTrainers = () => {
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
       />
-
-      <BigButton text="Start Workout" onPress={handleStartWorkout} />
     </ScrollView>
   );
 };

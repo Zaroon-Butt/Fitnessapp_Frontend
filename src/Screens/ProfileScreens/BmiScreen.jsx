@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import HeightSelector from '../../Components/Bmi/HeightSelector';
 import WeightSelector from '../../Components/Bmi/WeightSelector';
 import BmiModal from '../Modals/BmiModal';
+import { regular, regular16 } from '../../utils/Style';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -84,27 +85,27 @@ const BMICalculator = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <BackButton onPress={() => navigation.goBack()} />
-          <Text style={styles.headerText}>BMI Calculator</Text>
+          <Text style={[regular16,{flex: 1 ,textAlign:'center'}]}>BMI Calculator</Text>
         </View>
 
         <GenderSelector gender={data.gender} onChange={g => updateData('gender', g)} />
 
         <View style={styles.heightSection}>
-          <Text style={styles.label}>Height (in cm)</Text>
+          <Text style={[regular, { marginTop: 10 }]}>Height in cm</Text>
           <View style={styles.heightDisplay}>
             <Text style={styles.heightValue}>{data.height}</Text>
-            <Text style={styles.heightUnit}>cm</Text>
+            <Text style={regular}>cm</Text>
           </View>
           <HeightSelector height={data.height} onChange={h => updateData('height', h)} />
         </View>
 
         <View style={styles.inputRow}>
           <View style={styles.inputContainer}>
-            <Text style={styles.inputText}>Weight (kg)</Text>
+            <Text style={[regular,{color: '000000'}]}>Weight in kg</Text>
             <WeightSelector weight={data.weight} onChange={w => updateData('weight', w)} />
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.inputText}>Age</Text>
+            <Text style={[regular,{color: '000000'}]}>Age</Text>
             <AgeSelector age={data.age} onChange={a => updateData('age', a)} />
           </View>
         </View>
@@ -112,8 +113,9 @@ const BMICalculator = () => {
         <BigButton
           onPress={handleCalculate}
           disabled={!data.weight || data.weight <= 0}
-          text="Calculate BMI"
-        />
+        >
+          <Text style={[regular16, { color: '#000' }]}>Calculate BMI</Text>
+        </BigButton>
       </ScrollView>
 
       <BmiModal
@@ -129,28 +131,24 @@ const BMICalculator = () => {
 const styles = StyleSheet.create({
   container: { flexGrow: 1, padding: 20, backgroundColor: '#1c1c1e' },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  headerText: { fontSize: 20, fontWeight: '600', color: '#ffffff', textAlign: 'center', marginLeft: 50, marginTop: 10 },
 
   genderRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
   genderBtn: { flex: 1, backgroundColor: '#fff', borderWidth: 2, borderColor: '#E5E7EB', borderRadius: 16, paddingVertical: 24, marginHorizontal: 5, alignItems: 'center' },
   genderSelected: { borderColor: '#111827', backgroundColor: '#d0fd3e' },
   genderIcon: { fontSize: 50, marginBottom: 6, color: '#000000' },
-  genderLabel: { color: '#000000', fontSize: 16, fontWeight: '500' },
+  genderLabel: { ...regular, color: '#000000' },
 
   heightSection: { alignItems: 'center', marginBottom: 30 ,borderColor: '#2c2c2e', borderWidth: 3, borderRadius: 16 },
   heightDisplay: { flexDirection: 'row', alignItems: 'baseline', marginBottom: 20 },
   heightValue: { fontSize: 48, fontWeight: '300', color: '#ffffff' },
-  heightUnit: { fontSize: 16, color: '#ffffff', opacity: 0.8, marginLeft: 8 },
 
   ageContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20 },
   ageButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#d0fd3e', alignItems: 'center', justifyContent: 'center', marginHorizontal: 10 },
   ageButtonText: { fontSize: 24, fontWeight: 'bold', color: '#000000', textAlign: 'center' },
   ageValue: { fontSize: 24, fontWeight: 'bold', color: '#000000', minWidth: 40, textAlign: 'center' },
 
-  label: { fontSize: 14, color: '#ffffff', marginBottom: 4, textAlign: 'center' },
   inputRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },
   inputContainer: { flex: 1, backgroundColor: '#ffffff', borderRadius: 16, paddingVertical: 20, marginHorizontal: 5, alignItems: 'center', borderWidth: 1, borderColor: '#E5E7EB', minHeight: 100 },
-  inputText: { color: '#000000', fontSize: 14, marginBottom: 8 },
 });
 
 export default BMICalculator;

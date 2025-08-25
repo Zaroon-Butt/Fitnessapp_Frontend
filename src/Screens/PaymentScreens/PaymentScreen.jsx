@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View,  Text,StyleSheet,  SafeAreaView,TouchableOpacity,ScrollView, Alert} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { normal } from '../../utils/Style';
+import { normal, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
@@ -115,7 +115,6 @@ const Payment = () => {
       {/* Confirm Button */}
       <View style={styles.buttonWrapper}>
         <BigButton
-          text="Confirm"
           disabled={!cards || cards.length === 0 }
           onPress={() => {
             if (!cards || cards.length === 0) {
@@ -134,7 +133,9 @@ const Payment = () => {
               },
             });
           }}
-        />
+        >
+          <Text style={[regular16, { color: '#000' }]}>Confirm</Text>
+        </BigButton>
       </View>
     </SafeAreaView>
   );

@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import BottomNavbar from '../Components/Navbar/BottomNavbar';
 import ShowAllWorkout from '../Screens/HomeScreens/ShowAllWorkout';
-import WorkoutDetail from '../Screens/HomeScreens/WorkoutDetail';
+import WorkoutTypes from '../Screens/HomeScreens/WorkoutTypes';
 import SubscriptionScreen from '../Screens/PaymentScreens/SubscriptionScreen';
 import ShowAllTrainers from '../Screens/HomeScreens/ShowAllTrainers';
 import TrainerDetailScreen from '../Screens/HomeScreens/TrainerDetailScreen';
@@ -16,7 +16,6 @@ import EditCard from '../Screens/PaymentScreens/EditCardScreen';
 import EditProfileScreen from '../Screens/ProfileScreens/EditProfileScreen';
 import PolicyScreen from '../Screens/ProfileScreens/PolicyScreen';
 import SettingScreen from '../Screens/ProfileScreens/SettingScreen';
-import SignIn from '../Screens/AuthenticationScreens/SignIn';
 import UnitSettingScreen from '../Screens/ProfileScreens/UnitSettingScreen';
 import NotificationSettingScreen from '../Screens/ProfileScreens/NotificationSettingScreen';
 import LanguageSettingScreen from '../Screens/ProfileScreens/LanguageSettingScreen';
@@ -24,6 +23,8 @@ import WebviewScreen from '../Screens/HomeScreens/WebviewScreen';
 import SubscriptionPayment from '../Screens/PaymentScreens/SubscriptionPaymentScreen';
 import ContactUsScreen from '../Screens/ProfileScreens/ContactUsScreen';
 import BmiScreen from '../Screens/ProfileScreens/BmiScreen';
+import WorkoutTypesDetail from '../Screens/HomeScreens/WorkoutTypeDetail';
+import ExerciseDetailScreen from '../Screens/HomeScreens/ExcerciseDetailScreen';
 import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
@@ -38,7 +39,7 @@ const AppStack = () => {
     >
       <Stack.Screen name="BottomNavbar" component={BottomNavbar} />
       <Stack.Screen name="ShowAllWorkout" component={ShowAllWorkout} />
-      <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
+      <Stack.Screen name="WorkoutTypes" component={WorkoutTypes} />
       <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} />
       <Stack.Screen name="ShowAllTrainers" component={ShowAllTrainers} />
       <Stack.Screen name="TrainerDetail" component={TrainerDetailScreen} />
@@ -60,6 +61,8 @@ const AppStack = () => {
       <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
       <Stack.Screen name="SubscriptionPayment" component={SubscriptionPayment} />
       <Stack.Screen name="BmiScreen" component={BmiScreen} />
+      <Stack.Screen name="WorkoutTypesDetail" component={WorkoutTypesDetail} />
+      <Stack.Screen name="ExerciseDetailScreen" component={ExerciseDetailScreen} />
     </Stack.Navigator>
   );
 };

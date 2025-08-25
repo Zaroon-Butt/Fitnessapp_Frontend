@@ -6,10 +6,10 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  Linking,
 } from 'react-native';
 import { WorkoutCard } from '../../Components/Cards/WorkoutCard';
 import { normal, regular9 } from '../../utils/Style';
+import { useSubscriptionStatus } from '../../utils';
 import WorkoutCategoriesBar from '../../Components/Navbar/WorkoutCategoryBar';
 import {
   sampleWorkouts,
@@ -29,6 +29,9 @@ const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [normalModalVisible, setNormalModalVisible] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
+  
+  // Use the custom hook to check subscription status
+  const hasActiveSubscription = useSubscriptionStatus();
 
   const handleModalConfirm = () => {
     navigation.navigate('ShowAllTrainers');
@@ -54,14 +57,19 @@ const HomeScreen = () => {
 
   const handleWorkoutPress = workout => {
     setSelectedWorkout(workout);
-    workout.Pro ? setModalVisible(true) : setNormalModalVisible(true);
+    // Show ProUserModal if user has an active subscription, otherwise show UserModal
+    if (hasActiveSubscription) {
+      setModalVisible(true);
+    } else {
+      setNormalModalVisible(true);
+    }
   };
 
   const renderWorkoutItem = ({ item }) => (
     <View style={{ marginRight: 15, width: 320 }}>
       <WorkoutCard
         image={item.image}
-        title={item.title}
+        title={item.title} 
         subtitle={item.subtitle}
         onPress={handleWorkoutPress}
       />
@@ -111,7 +119,7 @@ const HomeScreen = () => {
             }}
           >
             <Text style={[regular9, { textAlign: 'left' }]}>
-              Today Workout Plan
+             Workout Types {/* Today Workout Plan */}
             </Text>
             <Text style={[regular9, { textAlign: 'right', color: '#D0FD3E' }]}>
               {Today}
@@ -119,9 +127,10 @@ const HomeScreen = () => {
           </View>
           <WorkoutCard
             image={todayWorkout.image}
-            title={todayWorkout.title}
-            subtitle={todayWorkout.subtitle}
-            onPress={() => navigation.navigate('WorkoutDetail')}
+            title={'All Workouts'}
+            // title={todayWorkout.title}
+            // subtitle={todayWorkout.subtitle}
+            onPress={() => navigation.navigate('WorkoutTypes')}
           />
         </View>
 
@@ -136,7 +145,7 @@ const HomeScreen = () => {
           }}
         >
           <Text style={[regular9, { textAlign: 'left' }]}>
-            Workout Categories
+          Special Trainings {/* // Workout Categories */}
           </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('ShowAllWorkout')}

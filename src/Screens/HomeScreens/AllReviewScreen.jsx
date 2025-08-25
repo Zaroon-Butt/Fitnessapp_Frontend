@@ -3,10 +3,8 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
-  Image,
 } from 'react-native';
-import { medium } from '../../utils/Style';
+import { medium ,regular16} from '../../utils/Style';
 import ReviewNavbar from '../../Components/Navbar/ReviewNavbar';
 import BackButton from '../../Components/Buttons/BackButton';
 import BigButton from '../../Components/Buttons/BigButton';
@@ -48,7 +46,9 @@ const AllReviewScreen = () => {
 
       {/* Fixed Bottom Button */}
       <View style={styles.bottomButtonContainer}>
-        <BigButton text="Write Review" onPress={handleBottomButtonPress} />
+        <BigButton onPress={handleBottomButtonPress}>
+          <Text style={[regular16, { color: '#000' }]}>Write Review</Text>
+        </BigButton>
       </View>
     </View>
   );

@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import BackButton from '../../Components/Buttons/BackButton';
-
+import { normal, normal16 } from '../../utils/Style';
 
 const WebviewScreen = ({ route, navigation }) => {
   const { url, title } = route.params;
@@ -14,7 +13,7 @@ const WebviewScreen = ({ route, navigation }) => {
         <View style={styles.backButtonContainer}>
           <BackButton onPress={() => navigation.goBack()} />
         </View>
-        <Text style={styles.headerTitle}>{title}</Text>
+        <Text style={[normal16, { flex: 1, numberOfLines: 2 }]}>{title}</Text>
       </View>
       <View style={styles.container}>
         <WebView source={{ uri: url }} style={styles.webview} />
@@ -29,19 +28,13 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop:20,
+    paddingTop: 20,
     paddingBottom: 10,
     backgroundColor: '#121212',
     paddingHorizontal: 10,
-    
   },
   backButtonContainer: {
     marginRight: 10,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   webview: {
     flex: 1,
@@ -49,6 +42,5 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 0,
   },
 });

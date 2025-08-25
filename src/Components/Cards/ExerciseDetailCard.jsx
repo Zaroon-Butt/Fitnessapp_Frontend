@@ -1,17 +1,22 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
-
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { WebView } from 'react-native-webview';
+import NextArrowButton from '../Buttons/NextArrowButton';
 
 const ExerciseDetailCard = ({ exercise, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.card}>
-        <Image source={exercise.image} style={styles.image} />
-        <View style={styles.info}>
-          <Text style={styles.title}>{exercise.title}</Text>
-          {exercise.duration && (
-            <Text style={styles.duration}>{exercise.duration}</Text>
-          )}
+    <TouchableOpacity onPress={onPress} style={styles.card}>
+      <View style={styles.contentRow}>
+        <WebView
+          source={exercise.image}
+          style={styles.image}
+          resizeMode="contain"
+        />
+        <Text style={styles.title} numberOfLines={3}>
+          {exercise.title}
+        </Text>
+        <View style={styles.arrowContainer}>
+          <NextArrowButton onPress={onPress} />
         </View>
       </View>
     </TouchableOpacity>
@@ -22,28 +27,34 @@ export default ExerciseDetailCard;
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#1e1e1e',
     borderRadius: 12,
     padding: 10,
-    marginBottom: 16, // use marginBottom for spacing instead of marginTop
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#b7ff00',
+  },
+  contentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '100%',
   },
   image: {
-    width: 70,
-    height: 70,
-    borderRadius: 10,
-  },
-  info: {
-    marginLeft: 14,
+    width: 100,
+    height: 100,
+    borderRadius: 25,
   },
   title: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+    flex: 1,
+    textAlign: 'left',
   },
-  duration: {
-    color: '#999',
-    fontSize: 14,
+  arrowContainer: {
+    marginLeft: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

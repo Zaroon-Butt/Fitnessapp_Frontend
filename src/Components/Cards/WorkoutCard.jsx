@@ -1,5 +1,6 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Workout } from '../../utils';
+import { normal16 } from '../../utils/Style';
 
 export const WorkoutCard = ({ title, image, subtitle, onPress }) => {
   return (
@@ -7,11 +8,11 @@ export const WorkoutCard = ({ title, image, subtitle, onPress }) => {
       <Image source={image ? image : Workout} style={styles.workoutImage} resizeMode="cover" />
       <View style={styles.workoutOverlay} />
       <View style={styles.workoutContent}>
-        <Text style={styles.workoutTitle}>
+        <Text style={[normal16, {textAlign: 'left', numberOfLines: 3 ,marginRight: 18}]}>
           {title ? title : 'Workout Name'}
         </Text>
         <Text style={styles.workoutTime}>
-          {subtitle ? subtitle : '30 mins'}
+          {subtitle}
         </Text>
       </View>
     </TouchableOpacity>

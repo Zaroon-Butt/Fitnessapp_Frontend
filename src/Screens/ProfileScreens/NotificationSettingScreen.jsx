@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import BackButton from '../../Components/Buttons/BackButton';
-import { normal16 } from '../../utils/Style';
+import { normal16, regular } from '../../utils/Style';
 
 const NotificationSettingScreen = () => {
   const [workoutReminders, setWorkoutReminders] = useState(false);
@@ -21,7 +21,7 @@ const NotificationSettingScreen = () => {
 
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
-          <Text style={styles.buttonText}>Workout Reminders </Text>
+          <Text style={[regular, { marginLeft: 15 }]}>Workout Reminders </Text>
           <Switch
             value={workoutReminders}
             onValueChange={setWorkoutReminders}
@@ -31,7 +31,7 @@ const NotificationSettingScreen = () => {
         </View>
 
         <View style={styles.button}>
-          <Text style={styles.buttonText}>Program Notification</Text>
+          <Text style={[regular, { marginLeft: 15 }]}>Program Notification</Text>
           <Switch
             value={programNotification}
             onValueChange={setProgramNotification}

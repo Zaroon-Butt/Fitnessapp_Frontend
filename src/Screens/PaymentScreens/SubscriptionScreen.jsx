@@ -12,8 +12,9 @@ import { useNavigation } from '@react-navigation/native';
 
 import { RF } from '../../utils/responsive'; // use RF(val) or replace with val directly
 import { Subscription } from '../../utils'; // Replace with actual image, e.g. require('../../assets/Subscription.jpg')
-import { medium, regular9 } from '../../utils/Style';
+import { medium, regular, regular16, regular9 } from '../../utils/Style';
 import BackButton from '../../Components/Buttons/BackButton';
+import BigButton from '../../Components/Buttons/BigButton';
 
 const { width, height } = Dimensions.get('window');
 
@@ -66,10 +67,8 @@ export default function SubscriptionScreen() {
               ]}
             />
             <View>
-              <Text style={styles.planTitle}>Monthly</Text>
-              <Text style={styles.planSubtitle}>
-                Pay monthly,cancel any time
-              </Text>
+              <Text style={[regular, { textAlign: 'left' }]}>Monthly</Text>
+              <Text style={regular9}>Pay monthly cancel any time</Text>
             </View>
           </View>
           <Text style={styles.planPrice}>
@@ -93,8 +92,8 @@ export default function SubscriptionScreen() {
               ]}
             />
             <View>
-              <Text style={styles.planTitle}>Yearly</Text>
-              <Text style={styles.planSubtitle}>Pay for a full year</Text>
+              <Text style={[regular, { textAlign: 'left' }]}>Yearly</Text>
+              <Text style={regular9}>Pay for a full year</Text>
             </View>
           </View>
           <Text style={styles.planPrice}>
@@ -103,9 +102,14 @@ export default function SubscriptionScreen() {
         </TouchableOpacity>
 
         {/* Subscribe Button */}
-        <TouchableOpacity style={styles.subscribeBtn} onPress={() => {navigation.navigate('SubscriptionPayment' ,{plan:selectedPlan});}}>
-          <Text style={styles.subscribeText}>Subscribe Now</Text>
-        </TouchableOpacity>
+
+        <BigButton
+          onPress={() => {
+            navigation.navigate('SubscriptionPayment', { plan: selectedPlan });
+          }}
+        >
+          <Text style={[regular16, { color: '#000' }]}>Subscribe Now</Text>
+        </BigButton>
       </View>
     </View>
   );
@@ -183,15 +187,7 @@ const styles = StyleSheet.create({
     borderColor: '#FF3B30',
     backgroundColor: '#FF3B30',
   },
-  planTitle: {
-    color: 'white',
-    fontSize: RF(15),
-  },
-  planSubtitle: {
-    color: '#AAA',
-    fontSize: RF(10),
-    marginTop: 2,
-  },
+
   planPrice: {
     color: 'white',
     fontSize: RF(16),
@@ -201,17 +197,4 @@ const styles = StyleSheet.create({
     color: '#CCC',
     fontSize: RF(10),
   },
-  subscribeBtn: {
-    backgroundColor: '#D8FF00',
-    paddingVertical: 16,
-    borderRadius: 50,
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  subscribeText: {
-    fontSize: RF(16),
-    fontWeight: 'bold',
-    color: '#000',
-  },
 });
-

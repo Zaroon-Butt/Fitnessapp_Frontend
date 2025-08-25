@@ -9,20 +9,23 @@ import {
   Alert,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { normal } from '../../utils/Style';
+import { useDispatch, useSelector } from 'react-redux';
+import { normal, regular, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
 import { WorkoutDetailImage } from '../../utils';
 import BankCard from '../../Components/Cards/BankCard';
 import { useNavigation } from '@react-navigation/native';
+import { setIsPro, setIsSubscription } from '../../redux/Reducers/userReducer';
+import { store } from '../../redux/store';
 
 const SubscriptionPayment = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const isCard = useSelector(state => state.user.isCard);
   const cards = useSelector(state => state.user.cards || []);
+  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,10 +83,12 @@ const SubscriptionPayment = () => {
 
       <View style={styles.buttonWrapper}>
         <BigButton
-          text="Confirm"
           onPress={() => {
             if (cards.length === 0) return Alert.alert('Please Add a Card');
             Alert.alert('Payment Successful');
+            // Set subscription status and pro status to true when payment is successful
+            dispatch(setIsSubscription(true));
+            dispatch(setIsPro(true));
             navigation.navigate('BottomNavbar', {
               screen: 'SubscriptionPayment',
               params: {
@@ -92,7 +97,9 @@ const SubscriptionPayment = () => {
             });
           }}
           disabled={cards.length === 0}
-        />
+        >
+          <Text style={[regular16, { color: '#000' }]}>Confirm</Text>
+        </BigButton>
       </View>
     </SafeAreaView>
   );

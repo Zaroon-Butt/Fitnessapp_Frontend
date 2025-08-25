@@ -1,3 +1,4 @@
+import { regular16 } from '../../utils/Style';
 import React from 'react';
 import {
   View,
@@ -60,7 +61,9 @@ const PaymentCompleteScreen = () => {
         </View>
       </View>
 
-  <BigButton text="Done" onPress={() => navigation.navigate('BottomNavbar')} />
+  <BigButton onPress={() => navigation.navigate('BottomNavbar')}>
+  <Text style={[regular16, { color: '#000' }]}>Done</Text>
+  </BigButton>
     </View>
   );
 };

@@ -10,7 +10,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { normal } from '../../utils/Style';
+import { normal, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import { ProfilePicture } from '../../utils';
@@ -51,12 +51,13 @@ const EditProfileScreen = () => {
 
         <View style={styles.buttonWrapper}>
           <BigButton
-            text="Done"
             onPress={() => {
               dispatch(setIsUsername(name));
               navigation.navigate('BottomNavbar');
             }}
-          />
+          >
+            <Text style={[regular16, { color: '#000' }]}>Done</Text>
+          </BigButton>
         </View>
       </ScrollView>
     </SafeAreaView>

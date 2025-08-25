@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { regular } from '../../utils/Style';
 
 const NotificationBar = () => {
   const [selectedCategory, setSelectedCategory] = useState('New');
@@ -23,7 +24,7 @@ const NotificationBar = () => {
       >
         <Text
           style={[
-            styles.categoryText,
+            regular,
             isSelected ? styles.selectedText : styles.unselectedText,
           ]}
         >
