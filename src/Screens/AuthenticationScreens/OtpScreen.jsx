@@ -97,13 +97,13 @@ const OtpScreen = () => {
         </View>
 
         <TouchableOpacity style={styles.tryAnotherWayButton}>
-          <Text style={styles.tryAnotherWayText}>
-            Did You Receive Any Code?
+          <Text style={regular}>
+            Did You Receive Any Code ?
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.verifyButton} onPress={() => navigation.navigate('SignIn')}>
-          <Text style={styles.verifyButtonText}>Verify</Text>
+          <Text style={{ ...regular, color: '#1C1C1E' }}>Verify</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -1,16 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, Animated, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { normal, regular9 } from '../../utils/Style';
 import NextButton from '../../Components/Buttons/NextButton';
 import BackButton from '../../Components/Buttons/BackButton';
+import { ProvideContext } from '../../context/ProvideContext';
 
 const itemHeight = 80;
 
-const HeightScreen = ({ onChange, initialHeight = 170 }) => {
+const HeightScreen = ({ initialHeight = 170 }) => {
   const [selectedHeight, setSelectedHeight] = useState(initialHeight);
   const [containerHeight, setContainerHeight] = useState(0);
   const navigation = useNavigation();
+  const { updateOnboarding } = useContext(ProvideContext);
   const scrollViewRef = useRef(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const heights = Array.from({ length: 81 }, (_, i) => i + 120);
@@ -28,7 +30,11 @@ const HeightScreen = ({ onChange, initialHeight = 170 }) => {
     }
   }, [containerHeight, initialHeight]);
 
-  const handleNext = () => onChange && onChange(selectedHeight);
+  const handleNext = () => {
+    console.log('Height selected:', selectedHeight);
+    updateOnboarding({ height: selectedHeight });
+    navigation.navigate('GoalScreen');
+  };
   const handleBack = () => navigation.goBack();
 
   const handleMomentumScrollEnd = (event) => {

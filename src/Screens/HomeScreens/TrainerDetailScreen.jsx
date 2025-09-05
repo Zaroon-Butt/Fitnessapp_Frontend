@@ -13,6 +13,7 @@ import BackButton from '../../Components/Buttons/BackButton';
 import BigButton from '../../Components/Buttons/BigButton';
 import { TrainerDetailImage } from '../../utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import RF from '../../utils/responsive';
 
 const TrainerProfile = () => {
   const navigation = useNavigation();
@@ -157,7 +158,7 @@ const TrainerProfile = () => {
           <BigButton
             onPress={handleBookAppointment}
           >
-            <Text style={[regular16, { color: '#000' }]}>Book an Appointment</Text>
+            <Text style={[regular16, { color: '#000', numberOfLines: 1 }]}>Book an Appointment</Text>
           </BigButton>
         </View>
       </ScrollView>

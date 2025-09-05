@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,15 @@ import { normal, regular } from '../../utils/Style';
 import NextButton from '../../Components/Buttons/NextButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import { RF } from '../../utils/responsive';
+import { ProvideContext } from '../../context/ProvideContext';
 
 const itemHeight = 80; // Height of each age row (keep in sync with styles / design)
 
-const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
+const AgeScreen = ({ initialAge = 35 }) => {
   const [selectedAge, setSelectedAge] = useState(initialAge);
-  const [containerHeight, setContainerHeight] = useState(0); // dynamic height of the spinner area
+  const [containerHeight, setContainerHeight] = useState(0);
   const navigation = useNavigation();
+  const { updateOnboarding } = useContext(ProvideContext);
   const scrollViewRef = useRef(null);
   const scrollY = useRef(
     new Animated.Value((initialAge - 13) * itemHeight),
@@ -43,7 +45,10 @@ const AgeScreen = ({ onAgeChange, initialAge = 35 }) => {
   }, [containerHeight, initialAge]);
 
   const handleNext = () => {
-    onAgeChange && onAgeChange(selectedAge);
+    console.log('Age selected:', selectedAge);
+    // Store age in context
+    updateOnboarding({ age: selectedAge });
+    navigation.navigate('HeightScreen'); // Navigate to next screen
   };
 
   const handleBack = () => {

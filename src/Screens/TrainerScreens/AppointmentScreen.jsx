@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import CalendarPicker from 'react-native-calendar-picker';
@@ -16,14 +17,18 @@ import BackButton from '../../Components/Buttons/BackButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
 import { WorkoutDetailImage, Next, BackButtonIcon } from '../../utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { scheduleAppointmentNotification } from '../../utils/NotificationService';
+import { useSelector } from 'react-redux';
 
 const Appointment = () => {
-
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState('09:30 AM');
   const navigation = useNavigation();
   const route = useRoute();
   const today = new Date();
+  const AppointmentNotification = useSelector(
+    state => state.user.AppointmentNotification,
+  );
 
   // Get trainer data from navigation params, fallback to default data
   const trainerData = route.params?.trainer || {
@@ -38,19 +43,41 @@ const Appointment = () => {
     setSelectedDate(date);
   };
 
-  
-
   const generateTimeSlots = () => {
     const slots = [];
     let hour = 0;
     let minute = 0;
 
+    // If selectedDate is today, filter out past times
+    let isToday = false;
+    if (selectedDate) {
+      const selected = new Date(selectedDate);
+      isToday =
+        selected.getFullYear() === today.getFullYear() &&
+        selected.getMonth() === today.getMonth() &&
+        selected.getDate() === today.getDate();
+    }
+
     while (hour < 24) {
       const period = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour > 12 ? hour - 12 : hour;
+      const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
       const displayMinute = minute === 0 ? '00' : '30';
-      slots.push(`${displayHour}:${displayMinute} ${period}`);
-
+      // Only show future slots if today is selected
+      let showSlot = true;
+      if (isToday) {
+        const now = new Date();
+        const slotDate = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+          hour,
+          minute,
+        );
+        showSlot = slotDate > now;
+      }
+      if (showSlot) {
+        slots.push(`${displayHour}:${displayMinute} ${period}`);
+      }
       if (minute === 0) {
         minute = 30;
       } else {
@@ -58,7 +85,6 @@ const Appointment = () => {
         hour++;
       }
     }
-
     return slots;
   };
 
@@ -145,22 +171,63 @@ const Appointment = () => {
 
       <View style={styles.sendButtonContainer}>
         <BigButton
-          onPress={() => {
+          onPress={async () => {
+            if (!selectedDate) {
+              Alert.alert(
+                'Missing Information',
+                'Please select a date for your appointment.',
+              );
+              return;
+            }
+
+            const appointmentDetails = {
+              date: selectedDate.toString().substring(0, 15),
+              time: selectedTime,
+              trainer: {
+                name: trainerData.name,
+                specialty: trainerData.specialty,
+                rating: trainerData.rating,
+                image: trainerData.image,
+              },
+            };
+
+            if (AppointmentNotification) {
+              try {
+                // Schedule notification
+                const notificationResult =
+                  await scheduleAppointmentNotification(appointmentDetails);
+                if (notificationResult) {
+                  Alert.alert(
+                    'Appointment Booked!',
+                    `Your appointment with ${trainerData.name} has been scheduled.\n\nReminder: ${notificationResult.reminderTime}\nAppointment: ${notificationResult.appointmentTime}`,
+                    [
+                      {
+                        text: 'OK',
+                        onPress: () => {
+                          navigation.navigate('Payment', {
+                            selectedDate,
+                            selectedTime,
+                            appointmentDetails,
+                          });
+                        },
+                      },
+                    ],
+                  );
+                  return;
+                }
+              } catch (error) {
+                console.error('Error scheduling notification:', error);
+                Alert.alert(
+                  'Notification Error',
+                  'Failed to schedule notification, but your appointment will still be processed.',
+                );
+              }
+            }
+            // If AppointmentNotification is off or notification failed, just navigate
             navigation.navigate('Payment', {
               selectedDate,
               selectedTime,
-              appointmentDetails: {
-                date: selectedDate
-                  ? selectedDate.toString().substring(0, 15)
-                  : null,
-                time: selectedTime,
-                trainer: {
-                  name: trainerData.name,
-                  specialty: trainerData.specialty,
-                  rating: trainerData.rating,
-                  image: trainerData.image, 
-                },
-              },
+              appointmentDetails,
             });
           }}
         >

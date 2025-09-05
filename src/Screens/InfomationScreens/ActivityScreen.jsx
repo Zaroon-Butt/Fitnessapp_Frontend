@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,15 @@ import { useNavigation } from '@react-navigation/native';
 import { normal, regular9 } from '../../utils/Style';
 import NextButton from '../../Components/Buttons/NextButton';
 import BackButton from '../../Components/Buttons/BackButton';
+import { ProvideContext } from '../../context/ProvideContext';
 
 const ITEM_HEIGHT = 65;
 
-const ActivityScreen = ({ onChange, initialActivity = 'Beginner' }) => {
+const ActivityScreen = ({ initialActivity = 'Beginner' }) => {
   const [selectedActivity, setSelectedActivity] = useState(initialActivity);
   const [containerHeight, setContainerHeight] = useState(0);
   const navigation = useNavigation();
+  const { updateOnboarding } = useContext(ProvideContext);
   const scrollViewRef = useRef(null);
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -36,7 +38,9 @@ const ActivityScreen = ({ onChange, initialActivity = 'Beginner' }) => {
   }, [containerHeight, initialActivity]);
 
   const handleNext = () => {
-    onChange?.(selectedActivity);
+    console.log('Activity selected:', selectedActivity);
+    updateOnboarding({ activityLevel: selectedActivity });
+    navigation.navigate('WeightScreen');
   };
 
   const handleBack = () => {

@@ -17,7 +17,7 @@ import { ProfilePicture } from '../../utils';
 import { setIsUsername } from '../../redux/Reducers/userReducer';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-
+import { RF } from '../../utils/responsive';
 
 const EditProfileScreen = () => {
   const username = useSelector(state => state.user.isUsername);
@@ -30,7 +30,7 @@ const EditProfileScreen = () => {
       <View style={styles.header}>
         <BackButton />
         <Text style={normal}>Edit Profile</Text>
-        <View style={{ width: 40 }} />
+        <View style={{ width: RF(40) }} />
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>

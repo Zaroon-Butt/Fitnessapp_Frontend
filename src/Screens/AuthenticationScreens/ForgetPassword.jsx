@@ -50,14 +50,14 @@ const ForgotPasswordScreen = () => {
         </View>
 
         <TouchableOpacity style={styles.tryAnotherWayButton}>
-          <Text style={styles.tryAnotherWayText}>Try another way</Text>
+          <Text style={regular}>Try another way</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.sendButton}
           onPress={() => navigation.navigate('OtpScreen')}
         >
-          <Text style={styles.sendButtonText}>Send</Text>
+          <Text style={{ ...regular, color: '#1C1C1E', padding: 4 }}>Send</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

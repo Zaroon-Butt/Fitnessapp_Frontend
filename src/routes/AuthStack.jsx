@@ -14,29 +14,6 @@ import OtpScreen from '../Screens/AuthenticationScreens/OtpScreen';
 import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
-const AgeScreenWrapper = ({ navigation, route }) => (
-  <AgeScreen
-    onAgeChange={age => navigation.navigate('HeightScreen', { age })}
-  />
-);
-
-const HeightScreenWrapper = ({ navigation, route }) => (
-  <HeightScreen
-    onChange={height => navigation.navigate('GoalScreen', { height })}
-  />
-);
-
-const GoalScreenWrapper = ({ navigation, route }) => (
-  <GoalScreen
-    onChange={goal => navigation.navigate('ActivityScreen', { goal })}
-  />
-);
-
-const ActivityScreenWrapper = ({ navigation, route }) => (
-  <ActivityScreen
-    onChange={activity => navigation.navigate('WeightScreen', { activity })}
-  />
-);
 
 const AuthStack = () => {
   const { isOnboarding } = useSelector(state => state.user);
@@ -53,10 +30,10 @@ const AuthStack = () => {
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="AgeScreen" component={AgeScreenWrapper} />
-      <Stack.Screen name="HeightScreen" component={HeightScreenWrapper} />
-      <Stack.Screen name="GoalScreen" component={GoalScreenWrapper} />
-      <Stack.Screen name="ActivityScreen" component={ActivityScreenWrapper} />
+      <Stack.Screen name="AgeScreen" component={AgeScreen} />
+      <Stack.Screen name="HeightScreen" component={HeightScreen} />
+      <Stack.Screen name="GoalScreen" component={GoalScreen} />
+      <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
       <Stack.Screen name="WeightScreen" component={WeightScreen} />
       <Stack.Screen name="ForgetPassword" component={ForgotPassword} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />

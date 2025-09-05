@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { RF } from '../../utils/responsive';
 import { useState } from 'react';
 import BackButton from '../../Components/Buttons/BackButton';
 import { normal16 } from '../../utils/Style';
@@ -15,14 +16,16 @@ const ContactUsScreen = () => {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
-        <Text style={[normal16, { marginLeft: 70 }]}>Contact Us</Text>
+  <Text style={[normal16, { marginLeft: 70 }]}>Contact Us</Text>
       </View>
 
       <View style={styles.infoBox}>
-        <Text style={styles.infoText}>Contact# 012345678910</Text>
+        <Text style={styles.infoText}>Contact</Text>
+        <Text style={styles.infoText}>01234567890</Text>
       </View>
       <View style={styles.infoBox}>
-        <Text style={styles.infoText}>Email: Webevis@gmail.com</Text>
+        <Text style={styles.infoText}>Email</Text>
+        <Text style={styles.infoText}>Webevis@gmail.com</Text>
       </View>
     </View>
   );
@@ -31,46 +34,39 @@ const ContactUsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: RF(10),
     backgroundColor: '#1c1c1e',
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    marginTop: 30,
-    marginBottom: 60,
+    paddingHorizontal: RF(10),
+    marginTop: RF(30),
+    marginBottom: RF(60),
   },
   infoBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: '#1c1c1e',
     borderBottomColor: '#2c2c2e',
     borderBottomWidth: 2,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    borderRadius: 12,
-    marginBottom: 12,
-    marginTop: 20,
+    paddingVertical: RF(5),
+    paddingHorizontal: RF(15),
+    borderRadius: RF(12),
+    marginBottom: RF(12),
+    marginTop: RF(20),
   },
   infoText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: RF(16),
+    fontWeight: 'bold',
     textAlign: 'left',
+    paddingHorizontal: RF(5)
   },
   buttonContainer: {
-    marginTop: 40,
+    marginTop: RF(30),
   },
-  button: {
-    paddingVertical: 15,
-    borderBottomColor: '#333',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+ 
 });
 
 export default ContactUsScreen;

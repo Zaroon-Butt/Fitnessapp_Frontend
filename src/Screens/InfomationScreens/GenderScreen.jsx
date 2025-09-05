@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Female, Male } from '../../utils';
 import { bold, light, normal, regular, medium } from '../../utils/Style';
 import NextButton from '../../Components/Buttons/NextButton';
 import { RF } from '../../utils/responsive';
+import { ProvideContext } from '../../context/ProvideContext';
 
 export default function GenderSelectionScreen() {
   const [selectedGender, setSelectedGender] = useState('male');
   const navigation = useNavigation();
+  const { updateOnboarding } = useContext(ProvideContext);
 
   const handleNext = () => {
     console.log('Gender selected:', selectedGender);
+    // Store gender in context
+    updateOnboarding({ gender: selectedGender });
     navigation.navigate('AgeScreen');
   };
 

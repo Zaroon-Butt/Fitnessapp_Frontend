@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,79 +8,73 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { store } from '../../redux/store';
-import { setIsUsername } from '../../redux/Reducers/userReducer';
 import { SignUpImage, Apple, Google } from '../../utils';
 import { medium24, regular, regular9 } from '../../utils/Style';
+import { Formik } from 'formik';
+import { SignUpSchema } from '../../utils/Validation';
+import { ProvideContext } from '../../context/ProvideContext';
+import { setIsUsername } from '../../redux/Reducers/userReducer';
+
 const { width, height } = Dimensions.get('window');
 
 export default function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const { checkEmail, updateOnboarding } = useContext(ProvideContext);
 
-  // Email validation function
-  const isValidEmail = email => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  // Password validation function
-  const isValidPassword = password => {
-    return password.length >= 6;
-  };
-
-  const handleSignUp = async () => {
+  const handleSignUp = async values => {
     try {
-      // Validate email
-      if (!email.trim()) {
-        Alert.alert('Error', 'Please enter your email address');
+      setIsLoading(true);
+      const emailCheck = await checkEmail(values.email);
+      if (emailCheck.exists) {
+        Alert.alert('Email Exists', 'This email is already registered');
+        setIsLoading(false);
         return;
       }
 
-      if (!isValidEmail(email)) {
-        Alert.alert('Error', 'Please enter a valid email address');
-        return;
-      }
+      updateOnboarding({
+        email: values.email,
+        password: values.password,
+      });
 
-      // Validate password
-      if (!password.trim()) {
-        Alert.alert('Error', 'Please enter your password');
-        return;
-      }
+      // Set username in Redux to the part before '@'
+      const username = values.email.split('@')[0].replace(/[0-9]/g, '');
+      dispatch(setIsUsername(username));
 
-      if (!isValidPassword(password)) {
-        Alert.alert('Error', 'Password must be at least 6 characters long');
-        return;
-      }
-
-      // Validate confirm password
-      if (!confirmPassword.trim()) {
-        Alert.alert('Error', 'Please confirm your password');
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        Alert.alert('Error', 'Passwords do not match');
-        return;
-      }
-
-      console.log('Sign up attempted with:', { email, password });
-
-  store.dispatch(setIsUsername(email.split('@')[0]));
-  navigation.navigate('GenderScreen');
+      setIsLoading(false);
+      navigation.navigate('GenderScreen');
     } catch (error) {
-      console.log('Sign up error:', error);
+      setIsLoading(false);
       Alert.alert(
-        'Sign Up Error',
-        'An error occurred during sign up. Please try again.',
+        'Error',
+        error.message || 'An error occurred while checking email',
       );
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleLogin();
+      navigation.navigate('GenderScreen');
+    } catch (error) {
+      console.log('Google sign in error:', error);
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      // Add Apple sign-in logic here
+      console.log('Apple sign in pressed');
+      // navigation.navigate('GenderScreen');
+    } catch (error) {
+      console.log('Apple sign in error:', error);
     }
   };
 
@@ -94,23 +88,29 @@ export default function SignUp() {
 
       {/* Top Navigation */}
       <View style={styles.topNavigation}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
           <Text
-            onPress={() => navigation.navigate('SignIn')}
             style={[
               regular,
-              { borderBottomColor: '#FFFFFF', borderBottomWidth: 2 },
+              {
+                borderBottomColor: '#FFFFFF',
+                borderBottomWidth: 3,
+                paddingBottom: 5,
+              },
             ]}
           >
             LogIn
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
           <Text
-            onPress={() => navigation.navigate('SignUp')}
             style={[
               regular,
-              { borderBottomColor: '#FFFFFF', borderBottomWidth: 2 },
+              {
+                borderBottomColor: '#D0FD3E',
+                borderBottomWidth: 3,
+                paddingBottom: 5,
+              },
             ]}
           >
             SignUp
@@ -134,62 +134,111 @@ export default function SignUp() {
         <View style={styles.diagonalOverlay} />
 
         <View style={styles.formContainer}>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#888"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-              required
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#888"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-              required
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password Again"
-              placeholderTextColor="#888"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-              required
-            />
-          </View>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#D0FD3E" marginBottom={20} />
+          ) : (
+            <Formik
+              initialValues={{ email: '', password: '', confirmPassword: '' }}
+              validationSchema={SignUpSchema}
+              onSubmit={handleSignUp}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <>
+                  <ScrollView style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Email"
+                      placeholderTextColor="#888"
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => {
+                        setIsInputFocused(false);
+                        handleBlur('email');
+                      }}
+                    />
+                    {errors.email && touched.email && (
+                      <Text style={styles.errorText}>{errors.email}</Text>
+                    )}
 
-          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-            <Text style={styles.signUpButtonText}>SIGN UP</Text>
-          </TouchableOpacity>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Password"
+                      placeholderTextColor="#888"
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      secureTextEntry
+                      autoCapitalize="none"
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => {
+                        setIsInputFocused(false);
+                        handleBlur('password');
+                      }}
+                    />
+                    {errors.password && touched.password && (
+                      <Text style={styles.errorText}>{errors.password}</Text>
+                    )}
 
-          <TouchableOpacity style={styles.icon} onPress={handleSignUp}>
-            <View>
-              <Image source={Apple} style={{ width: 50, height: 50 }} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.icon, { left: 80 }]}
-            onPress={handleSignUp}
-          >
-            <View>
-              <Image source={Google} style={{ width: 50, height: 50 }} />
-            </View>
-          </TouchableOpacity>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Confirm Password"
+                      placeholderTextColor="#888"
+                      value={values.confirmPassword}
+                      onChangeText={handleChange('confirmPassword')}
+                      secureTextEntry
+                      autoCapitalize="none"
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => {
+                        setIsInputFocused(false);
+                        handleBlur('confirmPassword');
+                      }}
+                    />
+                    {errors.confirmPassword && touched.confirmPassword && (
+                      <Text style={styles.errorText}>
+                        {errors.confirmPassword}
+                      </Text>
+                    )}
+                  </ScrollView>
+
+                  <TouchableOpacity
+                    style={styles.signUpButton}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={[regular9, { color: '#1C1C1E' }]}>
+                      SIGN UP
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </Formik>
+          )}
+
+          {!isLoading && (
+            <>
+              <TouchableOpacity style={styles.icon} onPress={handleAppleSignIn}>
+                <View>
+                  <Image source={Apple} style={{ width: 50, height: 50 }} />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.icon, { left: 80 }]}
+                onPress={handleGoogleSignIn}
+              >
+                <View>
+                  <Image source={Google} style={{ width: 50, height: 50 }} />
+                </View>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </View>
@@ -273,6 +322,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#FFFFFF',
   },
+  errorText: {
+    color: '#FF4D4F',
+    fontSize: 12,
+    marginBottom: 10,
+    marginTop: -10,
+  },
   signUpButton: {
     position: 'absolute',
     bottom: 20,
@@ -284,11 +339,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signUpButtonText: {
-    color: '#1C1C1E',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
   icon: {
     position: 'absolute',
     bottom: 20,

@@ -1,16 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, Animated, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { normal, regular9 } from '../../utils/Style';
 import NextButton from '../../Components/Buttons/NextButton';
 import BackButton from '../../Components/Buttons/BackButton';
+import { ProvideContext } from '../../context/ProvideContext';
 
 const itemHeight = 65;
 
-const GoalScreen = ({ onChange, initialGoal = 'Get Fitter' }) => {
+const GoalScreen = ({ initialGoal = 'Get Fitter' }) => {
   const [selectedGoal, setSelectedGoal] = useState(initialGoal);
   const [containerHeight, setContainerHeight] = useState(0);
   const navigation = useNavigation();
+  const { updateOnboarding } = useContext(ProvideContext);
   const scrollViewRef = useRef(null);
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -29,7 +31,11 @@ const GoalScreen = ({ onChange, initialGoal = 'Get Fitter' }) => {
     }
   }, [containerHeight, initialGoal]);
 
-  const handleNext = () => onChange && onChange(selectedGoal);
+  const handleNext = () => {
+    console.log('Goal selected:', selectedGoal);
+    updateOnboarding({ goal: selectedGoal });
+    navigation.navigate('ActivityScreen');
+  };
   const handleBack = () => navigation.goBack();
 
   const handleMomentumScrollEnd = (event) => {

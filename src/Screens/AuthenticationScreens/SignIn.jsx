@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../redux/store';
 import { setIsLogin, setIsUsername } from '../../redux/Reducers/userReducer';
@@ -11,54 +11,52 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SignInImage, Apple, Google } from '../../utils';
-import { medium24, regular } from '../../utils/Style';
+import {
+  medium24,
+  regular,
+} from '../../utils/Style';
+import { Formik } from 'formik';
+import { SignInSchema } from '../../utils/Validation';
+import { AuthApi } from '../../Api/AuthApi';
 const { width, height } = Dimensions.get('window');
 
 export default function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isLogin } = useSelector(state => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const isValidEmail = email => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  // Removed AuthContext usage for login
 
-  const isValidPassword = password => {
-    return password.length >= 6;
-  };
-
-  const handleSignIn = async () => {
+  const handleSignIn = async (values) => {
     try {
-      if (!email.trim()) {
-        Alert.alert('Error', 'Please enter your email address');
-        return;
-      }
-      if (!isValidEmail(email)) {
-        Alert.alert('Error', 'Please enter a valid email address');
-        return;
-      }
-      if (!password.trim()) {
-        Alert.alert('Error', 'Please enter your password');
-        return;
-      }
-      if (!isValidPassword(password)) {
-        Alert.alert('Error', 'Password must be at least 6 characters long');
-        return;
-      }
+      setIsLoading(true);
+      const data = await AuthApi.signIn({ email: values.email, password: values.password });
+      const username = values.email.split('@')[0].replace(/[0-9]/g, '');
 
-      store.dispatch(setIsLogin(true));
-      store.dispatch(setIsUsername(email.split('@')[0]));
-      // console.log('Login successful:', email.split('@')[0]);
-      Alert.alert('Success', 'Login successful');
+      dispatch(setIsLogin(true));
+      dispatch(setIsUsername(username));
     } catch (error) {
-      Alert.alert('Error', 'An unexpected error occurred');
+      Alert.alert('Login Failed', error.message || 'An error occurred');
+      console.log('Sign in error:', error);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleLogin();
+      const currentState = store.getState().user;
+      if (currentState.isLogin && !currentState.gender) {
+        navigation.navigate('GenderScreen');
+      }
+    } catch (error) {
+      console.log('Google sign in error:', error);
     }
   };
 
@@ -77,8 +75,9 @@ export default function SignIn() {
             style={[
               regular,
               {
-                borderBottomColor: '#FFFFFF',
-                borderBottomWidth: 2,
+                borderBottomColor: '#D0FD3E',
+                borderBottomWidth: 3,
+                paddingBottom: 5,
                 color: '#FFFFFF',
               },
             ]}
@@ -93,7 +92,8 @@ export default function SignIn() {
               regular,
               {
                 borderBottomColor: '#FFFFFF',
-                borderBottomWidth: 2,
+                borderBottomWidth: 3,
+                paddingBottom: 5,
                 color: '#FFFFFF',
               },
             ]}
@@ -106,7 +106,9 @@ export default function SignIn() {
       {!isInputFocused && (
         <View style={styles.textContainer}>
           <Text style={[medium24, { color: '#FFFFFF' }]}>WELCOME BACK</Text>
-          <Text style={[medium24, { color: '#FFFFFF' }]}>{store.getState().user.isUsername}</Text>
+          <Text style={[medium24, { color: '#FFFFFF' }]}>
+            {store.getState().user.isUsername}
+          </Text>
         </View>
       )}
 
@@ -115,53 +117,100 @@ export default function SignIn() {
         <View style={styles.diagonalOverlay} />
 
         <View style={styles.formContainer}>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#FFFFFF"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#FFFFFF"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-            />
-            <TouchableOpacity>
-              <Text
-                onPress={() => navigation.navigate('ForgetPassword')}
-                style={{ color: '#D0FD3E', marginTop: 10, textAlign: 'right' }}
-              >
-                Forget Password?
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#D0FD3E" marginBottom={20} />
+          ) : (
+            <Formik
+              initialValues={{ email: '', password: '' }}
+              validationSchema={SignInSchema}
+              onSubmit={handleSignIn}
+            >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <>
+                <ScrollView style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    placeholderTextColor="#FFFFFF"
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => {
+                      setIsInputFocused(false);
+                      handleBlur('email');
+                    }}
+                  />
+                  {errors.email && touched.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
 
-          <TouchableOpacity style={styles.SignInButton} onPress={handleSignIn}>
-            <Text style={styles.SignInButtonText}>LOGIN </Text>
-          </TouchableOpacity>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor="#FFFFFF"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => {
+                      setIsInputFocused(false);
+                      handleBlur('password');
+                    }}
+                  />
+                  {errors.password && touched.password && (
+                    <Text style={styles.errorText}>{errors.password}</Text>
+                  )}
 
-          <TouchableOpacity style={styles.icon}>
-            <View>
-              <Image source={Apple} style={{ width: 50, height: 50 }} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.icon, { left: 80 }]}>
-            <View>
-              <Image source={Google} style={{ width: 50, height: 50 }} />
-            </View>
-          </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => navigation.navigate('ForgetPassword')}
+                      style={{
+                        ...regular,
+                        color: '#D0FD3E',
+                        marginTop: 10,
+                        textAlign: 'right',
+                      }}
+                    >
+                      Forget Password ?
+                    </Text>
+                  </TouchableOpacity>
+                </ScrollView>
+
+                <TouchableOpacity
+                  style={styles.SignInButton}
+                  onPress={handleSubmit}
+                >
+                  <Text style={{ ...regular, color: '#1C1C1E' }}>LOGIN </Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </Formik>
+          )}
+
+          {!isLoading && (
+            <>
+              <TouchableOpacity style={styles.icon} onPress={() => console.log('Apple sign in pressed')}>
+                <View>
+                  <Image source={Apple} style={{ width: 50, height: 50 }} />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.icon, { left: 80 }]} onPress={handleGoogleSignIn}>
+                <View>
+                  <Image source={Google} style={{ width: 50, height: 50 }} />
+                </View>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </View>
@@ -245,6 +294,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#FFFFFF',
   },
+  errorText: {
+    color: '#FF4D4F',
+    fontSize: 12,
+    marginBottom: 10,
+    marginTop: -10,
+  },
   SignInButton: {
     position: 'absolute',
     bottom: 20,
@@ -256,11 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  SignInButtonText: {
-    color: '#1C1C1E',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+ 
   icon: {
     position: 'absolute',
     bottom: 20,

@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-const API_KEY = 'dc8645ffcemshb09f9aff3759803p1a9a2bjsn386cd617438a';
-const BASE_URL = 'https://exercisedb-api1.p.rapidapi.com/api/v1';
+import { API_KEY, BASE_URL } from '@env';
 
 const createAxiosInstance = () => {
   return axios.create({

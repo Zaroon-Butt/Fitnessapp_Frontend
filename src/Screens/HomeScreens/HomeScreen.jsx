@@ -11,11 +11,7 @@ import { WorkoutCard } from '../../Components/Cards/WorkoutCard';
 import { normal, regular9 } from '../../utils/Style';
 import { useSubscriptionStatus } from '../../utils';
 import WorkoutCategoriesBar from '../../Components/Navbar/WorkoutCategoryBar';
-import {
-  sampleWorkouts,
-  todayWorkout,
-  newWorkout,
-} from '../../SampleData/sampleWorkouts';
+import { sampleWorkouts,todayWorkout,newWorkout,} from '../../SampleData/sampleWorkouts';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import ProUserModal from '../Modals/ProUserModal';

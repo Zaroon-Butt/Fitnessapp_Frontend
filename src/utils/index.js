@@ -42,6 +42,6 @@ export const FitnessTrainer3 = require('../images/FitnessTrainer3.jpg');
 export const FitnessTrainer4 = require('../images/FitnessTrainer4.jpg');
 export const FitnessTrainer5 = require('../images/FitnessTrainer5.jpeg');
 export const FitnessTrainer6 = require('../images/FitnessTrainer6.jpeg');
-
+export const clipboard2 = require('../images/clipboard2.png');
 // Export the subscription status hook
 export { default as useSubscriptionStatus } from './hooks/useSubscriptionStatus';

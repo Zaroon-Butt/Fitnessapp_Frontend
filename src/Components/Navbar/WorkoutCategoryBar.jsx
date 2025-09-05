@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { regular, regular9 } from '../../utils/Style';
-import { useNavigation } from '@react-navigation/native';
 
 const WorkoutCategoriesBar = () => {
   const [selectedCategory, setSelectedCategory] = useState('Beginner');
-  const navigation = useNavigation();
-
   const categories = ['Beginner', 'Intermediate', 'Advance'];
 
   const renderCategoryButton = category => {
@@ -58,7 +55,7 @@ const styles = StyleSheet.create({
   },
   categoryButton: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
   },
   selectedButton: {
     backgroundColor: '#d0fd3e',
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
   unselectedButton: {
     backgroundColor: 'transparent',
   },
- 
+
   selectedText: {
     color: '#000000',
   },

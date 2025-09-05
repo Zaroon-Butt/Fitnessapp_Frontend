@@ -168,7 +168,7 @@ export const newWorkout = [
     calories: 350,
     image: onboard2,
     Pro: true,
-    url: 'https://www.youtube.com/watch?v=xWOPyldTDL4', // legs
+    url: 'https://youtu.be/q7rCeOa_m58?si=D0IcHdAU3x0rCnJp', // legs
   },
   {
     id: 'new-6',

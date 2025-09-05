@@ -12,17 +12,18 @@ import BackButton from '../../Components/Buttons/BackButton';
 import { medium, regular, regular16 } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, store } from '../../redux/store';
+import { store } from '../../redux/store';
 import NextArrowButton from '../../Components/Buttons/NextArrowButton';
-import { setIsLogin } from '../../redux/Reducers/userReducer';
-import { isUsername } from '../../redux/Reducers/userReducer';
+import { logoutUser } from '../../redux/Reducers/userReducer';
+import { RF } from '../../utils/responsive';
+
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const today = new Date().toLocaleDateString();
 
   const handleSignOut = () => {
-    store.dispatch(setIsLogin(false));
+    store.dispatch(logoutUser());
   };
 
   const isUsername = useSelector(state => state.user.isUsername);
@@ -37,19 +38,29 @@ const ProfileScreen = () => {
       <View style={styles.profileSection}>
         <View style={styles.profileImageWrapper}>
           <Image source={ProfilePicture} style={styles.profileImage} />
-          <View style={styles.proBadge}>
-            <Text style={styles.proText}>PRO</Text>
-          </View>
+          {useSelector(state => state.user.isPro) && (
+            <View style={styles.proBadge}>
+              <Text style={styles.proText}>PRO</Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.verticalDivider} />
 
         <View style={styles.profileInfo}>
-          <Text style={styles.joinedText}>Joined</Text>
-          <Text style={styles.joinedDate}>2 months ago</Text>
-          <Text style={styles.proMemberText}>Pro Member</Text>
-          <Text style={styles.subscriptionEnd}>Joined {today}</Text>
-          <Text style={styles.subscriptionType}>12 Months Subscription</Text>
+          
+          {/* <Text style={styles.joinedDate}>2 months ago</Text> */}
+          {useSelector(state => state.user.isSubscription) && (
+            <>
+            <Text style={[regular, { textAlign: 'left' ,marginBottom: RF(5) }]}>Details</Text>
+              {/* <Text style={styles.joinedText}>Joined</Text> */}
+              <Text style={styles.proMemberText}>Pro Member</Text>
+              <Text style={styles.subscriptionEnd}>Joined {today}</Text>
+              {/* <Text style={styles.subscriptionType}>
+                12 Months Subscription
+              </Text> */}
+            </>
+          )}
         </View>
       </View>
 

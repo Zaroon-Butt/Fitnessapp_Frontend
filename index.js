@@ -1,9 +1,10 @@
 /**
  * @format
  */
-
-// Must be at the top for Reanimated
 import 'react-native-reanimated';
+
+// Load environment variables
+
 
 import { AppRegistry } from 'react-native';
 import App from './App';
