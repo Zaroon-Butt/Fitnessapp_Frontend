@@ -11,6 +11,7 @@ import SignUp from '../Screens/AuthenticationScreens/SignUp';
 import SignIn from '../Screens/AuthenticationScreens/SignIn';
 import ForgotPassword from '../Screens/AuthenticationScreens/ForgetPassword';
 import OtpScreen from '../Screens/AuthenticationScreens/OtpScreen';
+import ResetPassword from '../Screens/AuthenticationScreens/ResetPassword';
 import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
@@ -37,6 +38,7 @@ const AuthStack = () => {
       <Stack.Screen name="WeightScreen" component={WeightScreen} />
       <Stack.Screen name="ForgetPassword" component={ForgotPassword} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
     </Stack.Navigator>
   );
 };

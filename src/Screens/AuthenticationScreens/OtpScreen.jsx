@@ -9,14 +9,78 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { normal, regular } from '../../utils/Style'; // Assuming these styles are defined in your Style.js
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';
+import { AuthApi } from '../../Api/AuthApi';
+
 const OtpScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { email } = route.params || {};
   const inputRefs = useRef([]);
   const [otp, setOtp] = useState(new Array(6).fill(''));
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleVerifyOTP = async () => {
+    const otpString = otp.join('');
+    
+    if (otpString.length !== 6) {
+      Alert.alert('Error', 'Please enter the complete 6-digit OTP');
+      return;
+    }
+
+    if (!email) {
+      Alert.alert('Error', 'Email not found. Please go back and try again.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await AuthApi.verifyOTP(email, otpString);
+      Alert.alert(
+        'Success',
+        'OTP verified successfully',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('ResetPassword', { 
+              resetToken: response.resetToken 
+            })
+          }
+        ]
+      );
+    } catch (error) {
+      Alert.alert('Error', error.message || 'OTP verification failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    if (!email) {
+      Alert.alert('Error', 'Email not found. Please go back and try again.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await AuthApi.forgotPassword(email);
+      Alert.alert('Success', 'OTP sent again to your email');
+      // Clear current OTP
+      setOtp(new Array(6).fill(''));
+      if (inputRefs.current[0]) {
+        inputRefs.current[0].focus();
+      }
+    } catch (error) {
+      Alert.alert('Error', error.message || 'Failed to resend OTP');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (text, index) => {
     const newOtp = [...otp];
@@ -96,14 +160,22 @@ const OtpScreen = () => {
           ))}
         </View>
 
-        <TouchableOpacity style={styles.tryAnotherWayButton}>
+        <TouchableOpacity style={styles.tryAnotherWayButton} onPress={handleResendOTP}>
           <Text style={regular}>
-            Did You Receive Any Code ?
+            Did You Receive Any Code? Resend OTP
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.verifyButton} onPress={() => navigation.navigate('SignIn')}>
-          <Text style={{ ...regular, color: '#1C1C1E' }}>Verify</Text>
+        <TouchableOpacity 
+          style={[styles.verifyButton, isLoading && { opacity: 0.7 }]} 
+          onPress={handleVerifyOTP}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="#1C1C1E" size="small" />
+          ) : (
+            <Text style={{ ...regular, color: '#1C1C1E' }}>Verify</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

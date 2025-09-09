@@ -13,43 +13,54 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { heading, light, medium, normal, regular } from '../../utils/Style';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';
 import { AuthApi } from '../../Api/AuthApi';
 
-const ForgotPasswordScreen = () => {
-  const [email, setEmail] = useState('');
+const ResetPassword = () => {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const route = useRoute();
+  const { resetToken } = route.params || {};
 
-  const handleSendOTP = async () => {
-    if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
+  const handleResetPassword = async () => {
+    if (!password.trim()) {
+      Alert.alert('Error', 'Please enter a new password');
       return;
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters long');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    if (!resetToken) {
+      Alert.alert('Error', 'Reset token not found. Please try the process again.');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await AuthApi.forgotPassword(email);
+      const response = await AuthApi.resetPassword(resetToken, password);
       Alert.alert(
-        'Success', 
-        response.message || 'OTP sent to your email successfully',
+        'Success',
+        response.message || 'Password reset successfully',
         [
           {
             text: 'OK',
-            onPress: () => navigation.navigate('OtpScreen', { email })
+            onPress: () => navigation.navigate('SignIn')
           }
         ]
       );
     } catch (error) {
-      Alert.alert('Error', error.message || 'Failed to send OTP');
+      Alert.alert('Error', error.message || 'Password reset failed');
     } finally {
       setIsLoading(false);
     }
@@ -66,39 +77,35 @@ const ForgotPasswordScreen = () => {
 
       {/* Main Content */}
       <View style={styles.mainContent}>
-        <Text style={[normal, { textAlign: 'flex-end' }]}>
-          FORGOT PASSWORD?
-        </Text>
-
-        <Text style={[regular, { marginTop: 20, textAlign: 'flex-end' }]}>
-          ENTER YOUR INFORMATIONS BELOW OR{'\n'}LOGIN WITH A OTHER ACCOUNT
-        </Text>
+        <Text style={[normal, { textAlign: 'flex-end' }]}>RESET PASSWORD</Text>
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.emailInput}
-            placeholder="Email"
+            style={styles.passwordInput}
+            placeholder="New Password"
             placeholderTextColor="#434343"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <TextInput
+            style={[styles.passwordInput, { marginTop: 20 }]}
+            placeholder="Confirm New Password"
+            placeholderTextColor="#434343"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
           />
         </View>
-
-        <TouchableOpacity style={styles.tryAnotherWayButton}>
-          <Text style={regular}>Try another way</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.sendButton, isLoading && { opacity: 0.7 }]}
-          onPress={handleSendOTP}
+        <TouchableOpacity 
+          style={[styles.saveButton, isLoading && { opacity: 0.7 }]}
+          onPress={handleResetPassword}
           disabled={isLoading}
         >
           {isLoading ? (
             <ActivityIndicator color="#1C1C1E" size="small" />
           ) : (
-            <Text style={{ ...regular, color: '#1C1C1E', padding: 4 }}>Send</Text>
+            <Text style={{ ...regular, color: '#1C1C1E', padding: 4 }}>Save</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -150,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 32,
   },
-  emailInput: {
+  passwordInput: {
     fontSize: 18,
     color: '#ffffff',
     paddingVertical: 16,
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
   },
-  sendButton: {
+  saveButton: {
     backgroundColor: '#d0fd3e',
     paddingVertical: 10,
     paddingHorizontal: 50,
@@ -177,12 +184,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginBottom: 32,
-  },
-  sendButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000000',
-  },
+  }
 });
 
-export default ForgotPasswordScreen;
+export default ResetPassword;
