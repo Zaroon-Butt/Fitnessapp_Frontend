@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View,  Text,StyleSheet,  SafeAreaView,TouchableOpacity,ScrollView, Alert} from 'react-native';
+import { View,  Text,StyleSheet,  SafeAreaView,TouchableOpacity,ScrollView} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { normal, regular16 } from '../../utils/Style';
@@ -8,6 +8,7 @@ import BackButton from '../../Components/Buttons/BackButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
 import BankCard from '../../Components/Cards/BankCard';
 import { WorkoutDetailImage } from '../../utils';
+import AlertModal from '../Modals/AlertModal';
 
 const Payment = () => {
   const navigation = useNavigation();
@@ -41,6 +42,10 @@ const Payment = () => {
   const [estimatedCost] = useState(
     Math.round(Math.random() * 100) + 50
   );
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,11 +123,9 @@ const Payment = () => {
           disabled={!cards || cards.length === 0 }
           onPress={() => {
             if (!cards || cards.length === 0) {
-              Alert.alert(
-                "No Payment Method",
-                "Please add a payment method to continue.",
-                [{ text: "OK" }]
-              );
+              setAlertTitle('No Payment Method');
+              setAlertMessage('Please add a payment method to continue.');
+              setAlertVisible(true);
               return;
             }
             navigation.navigate('PaymentCompleteScreen', {
@@ -137,6 +140,13 @@ const Payment = () => {
           <Text style={[regular16, { color: '#000' }]}>Confirm</Text>
         </BigButton>
       </View>
+
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+      />
     </SafeAreaView>
   );
 };

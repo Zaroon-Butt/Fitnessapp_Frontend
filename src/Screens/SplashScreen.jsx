@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { heading } from '../utils/Style';
 import { SplashScreenLogo } from '../utils';
+import { useDispatch } from 'react-redux';
+import { setIsLogin } from '../redux/Reducers/userReducer';
 
 const DumbbellIcon = ({ style }) => {
   return (
@@ -14,7 +16,9 @@ const DumbbellIcon = ({ style }) => {
 };
 
 const SplashScreen = () => {
- 
+  const dispatch = useDispatch();
+
+  dispatch(setIsLogin(false));
 
   return (
     <View style={styles.container}>

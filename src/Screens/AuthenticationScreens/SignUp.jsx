@@ -7,7 +7,6 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  Alert,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
@@ -19,6 +18,7 @@ import { Formik } from 'formik';
 import { SignUpSchema } from '../../utils/Validation';
 import { ProvideContext } from '../../context/ProvideContext';
 import { setIsUsername } from '../../redux/Reducers/userReducer';
+import AlertModal from '../Modals/AlertModal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,14 +29,20 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const { checkEmail, updateOnboarding } = useContext(ProvideContext);
 
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
   const handleSignUp = async values => {
     try {
       setIsLoading(true);
       const emailCheck = await checkEmail(values.email);
       if (emailCheck.exists) {
-        Alert.alert('Email Exists', 'This email is already registered');
+        setAlertTitle('Email Exists');
+        setAlertMessage('This email is already registered');
+        setAlertVisible(true);
         setIsLoading(false);
-        return;
+        return; // Stop here if email exists
       }
 
       updateOnboarding({
@@ -49,13 +55,12 @@ export default function SignUp() {
       dispatch(setIsUsername(username));
 
       setIsLoading(false);
-      navigation.navigate('GenderScreen');
+      navigation.navigate('GenderScreen'); // Only navigates if email does not exist
     } catch (error) {
       setIsLoading(false);
-      Alert.alert(
-        'Error',
-        error.message || 'An error occurred while checking email',
-      );
+      setAlertTitle('Error');
+      setAlertMessage(error.message || 'An error occurred while checking email');
+      setAlertVisible(true);
     }
   };
 
@@ -241,6 +246,13 @@ export default function SignUp() {
           )}
         </View>
       </View>
+
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+      />
     </View>
   );
 }

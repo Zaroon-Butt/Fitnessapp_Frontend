@@ -49,15 +49,15 @@ const scheduleAppointmentNotification = async ({ date, time, trainer }) => {
     const appointmentDateTime = parseDateTime(date, time);
 
     const reminderTime = new Date(
-      appointmentDateTime.getTime() - 5 * 60 * 1000,
+      appointmentDateTime.getTime() - 15 * 60 * 1000,
     );
     const appointmentTime = appointmentDateTime;
 
-    // Reminder notification (5 mins before)
+    // Reminder notification (28 mins before)
     await notifee.createTriggerNotification(
       buildNotification(
         '⏰ Appointment Reminder',
-        `Your appointment with ${trainer.name} is starting in 5 minutes!`,
+        `Your appointment with ${trainer.name} is starting in 15 minutes `,
       ),
       buildTrigger(reminderTime),
     );
@@ -102,7 +102,7 @@ const scheduleWorkoutReminder = async (
       {
         type: TriggerType.TIMESTAMP,
         timestamp: firstTrigger,
-        repeatFrequency: RepeatFrequency.HOURLY,
+        repeatFrequency: RepeatFrequency.DAILY,
       },
     );
 

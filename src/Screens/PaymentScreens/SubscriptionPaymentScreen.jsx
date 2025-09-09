@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +18,7 @@ import BankCard from '../../Components/Cards/BankCard';
 import { useNavigation } from '@react-navigation/native';
 import { setIsPro, setIsSubscription } from '../../redux/Reducers/userReducer';
 import { store } from '../../redux/store';
+import AlertModal from '../Modals/AlertModal';
 
 const SubscriptionPayment = () => {
   const route = useRoute();
@@ -26,6 +26,10 @@ const SubscriptionPayment = () => {
   const isCard = useSelector(state => state.user.isCard);
   const cards = useSelector(state => state.user.cards || []);
   const dispatch = useDispatch();
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,8 +88,15 @@ const SubscriptionPayment = () => {
       <View style={styles.buttonWrapper}>
         <BigButton
           onPress={() => {
-            if (cards.length === 0) return Alert.alert('Please Add a Card');
-            Alert.alert('Payment Successful');
+            if (cards.length === 0) {
+              setAlertTitle('Error');
+              setAlertMessage('Please Add a Card');
+              setAlertVisible(true);
+              return;
+            }
+            setAlertTitle('Success');
+            setAlertMessage('Payment Successful');
+            setAlertVisible(true);
             // Set subscription status and pro status to true when payment is successful
             dispatch(setIsSubscription(true));
             dispatch(setIsPro(true));
@@ -101,6 +112,13 @@ const SubscriptionPayment = () => {
           <Text style={[regular16, { color: '#000' }]}>Confirm</Text>
         </BigButton>
       </View>
+
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+      />
     </SafeAreaView>
   );
 };

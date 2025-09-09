@@ -7,7 +7,6 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 
 import CalendarPicker from 'react-native-calendar-picker';
@@ -19,16 +18,25 @@ import { WorkoutDetailImage, Next, BackButtonIcon } from '../../utils';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { scheduleAppointmentNotification } from '../../utils/NotificationService';
 import { useSelector } from 'react-redux';
+import NotificationModal from '../Modals/NotificationModal';
+import AlertModal from '../Modals/AlertModal';
 
 const Appointment = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState('09:30 AM');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalReminderTime, setModalReminderTime] = useState('');
+  const [modalAppointmentTime, setModalAppointmentTime] = useState('');
   const navigation = useNavigation();
   const route = useRoute();
   const today = new Date();
   const AppointmentNotification = useSelector(
     state => state.user.AppointmentNotification,
   );
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   // Get trainer data from navigation params, fallback to default data
   const trainerData = route.params?.trainer || {
@@ -173,10 +181,9 @@ const Appointment = () => {
         <BigButton
           onPress={async () => {
             if (!selectedDate) {
-              Alert.alert(
-                'Missing Information',
-                'Please select a date for your appointment.',
-              );
+              setAlertTitle('Missing Information');
+              setAlertMessage('Please select a date for your appointment.');
+              setAlertVisible(true);
               return;
             }
 
@@ -194,33 +201,18 @@ const Appointment = () => {
             if (AppointmentNotification) {
               try {
                 // Schedule notification
-                const notificationResult =
-                  await scheduleAppointmentNotification(appointmentDetails);
+                const notificationResult = await scheduleAppointmentNotification(appointmentDetails);
                 if (notificationResult) {
-                  Alert.alert(
-                    'Appointment Booked!',
-                    `Your appointment with ${trainerData.name} has been scheduled.\n\nReminder: ${notificationResult.reminderTime}\nAppointment: ${notificationResult.appointmentTime}`,
-                    [
-                      {
-                        text: 'OK',
-                        onPress: () => {
-                          navigation.navigate('Payment', {
-                            selectedDate,
-                            selectedTime,
-                            appointmentDetails,
-                          });
-                        },
-                      },
-                    ],
-                  );
+                  setModalReminderTime(notificationResult.reminderTime);
+                  setModalAppointmentTime(notificationResult.appointmentTime);
+                  setModalVisible(true);
                   return;
                 }
               } catch (error) {
                 console.error('Error scheduling notification:', error);
-                Alert.alert(
-                  'Notification Error',
-                  'Failed to schedule notification, but your appointment will still be processed.',
-                );
+                setAlertTitle('Notification Error');
+                setAlertMessage('Failed to schedule notification, but your appointment will still be processed.');
+                setAlertVisible(true);
               }
             }
             // If AppointmentNotification is off or notification failed, just navigate
@@ -234,6 +226,36 @@ const Appointment = () => {
           <Text style={[regular16, { color: '#000' }]}>Send</Text>
         </BigButton>
       </View>
+      <NotificationModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+          navigation.navigate('Payment', {
+            selectedDate,
+            selectedTime,
+            appointmentDetails: {
+              date: selectedDate?.toString().substring(0, 15),
+              time: selectedTime,
+              trainer: {
+                name: trainerData.name,
+                specialty: trainerData.specialty,
+                rating: trainerData.rating,
+                image: trainerData.image,
+              },
+            },
+          });
+        }}
+        trainerName={trainerData.name}
+        reminderTime={modalReminderTime}
+        appointmentTime={modalAppointmentTime}
+      />
+
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+      />
     </SafeAreaView>
   );
 };

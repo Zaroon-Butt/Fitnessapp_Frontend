@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
-  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +15,7 @@ import NextButton from '../../Components/Buttons/NextButton';
 import { medium, regular } from '../../utils/Style';
 import { setIsLogin, setIsOnboarding, setIsPro } from '../../redux/Reducers/userReducer';
 import { ProvideContext } from '../../context/ProvideContext';
+import AlertModal from '../Modals/AlertModal';
 
 const { width: screenWidth } = Dimensions.get('window');
 const ITEM_WIDTH = 14;
@@ -106,6 +106,10 @@ const WeightInputScreen = () => {
   const { isLogin } = useSelector(state => state.user);
   const { submitOnboarding, updateOnboarding } = useContext(ProvideContext);
 
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
   const handleNextPress = async () => {
     if (isLoading) return; // Prevent multiple calls
 
@@ -133,7 +137,9 @@ const WeightInputScreen = () => {
       console.log('=== WEIGHT SUBMISSION SUCCESS ===');
     } catch (error) {
       console.log('Error during weight submission:', error);
-      Alert.alert('Signup Failed', error.message || 'An error occurred during signup');
+      setAlertTitle('Signup Failed');
+      setAlertMessage(error.message || 'An error occurred during signup');
+      setAlertVisible(true);
       
       console.log('=== WEIGHT SUBMISSION COMPLETED WITH ERRORS ===');
     } finally {
@@ -177,6 +183,13 @@ const WeightInputScreen = () => {
           />
         </View>
       </View>
+
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+      />
     </SafeAreaView>
   );
 };

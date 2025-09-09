@@ -23,23 +23,25 @@ const calculateBMI = (weight, height) => {
 };
 // Age Selector
 const AgeSelector = ({ age, onChange }) => (
-  <View style={styles.ageContainer}>
-    <TouchableOpacity
-      style={[styles.ageButton, age <= 1 && { opacity: 0.5 }]}
-      onPress={() => age > 1 && onChange(age - 1)}
-      disabled={age <= 1}
-    >
-      <Text style={styles.ageButtonText}>-</Text>
-    </TouchableOpacity>
-    <Text style={styles.ageValue}>{age}</Text>
-    <TouchableOpacity
-      style={[styles.ageButton, age >= 120 && { opacity: 0.5 }]}
-      onPress={() => age < 120 && onChange(age + 1)}
-      disabled={age >= 120}
-    >
-      <Text style={styles.ageButtonText}>+</Text>
-    </TouchableOpacity>
-  </View>
+  <>
+    <View style={styles.ageContainer}>
+      <TouchableOpacity
+        style={[styles.ageButton, age <= 1 && { opacity: 0.5 }]}
+        onPress={() => age > 1 && onChange(age - 1)}
+        disabled={age <= 1}
+      >
+        <Text style={styles.ageButtonText}>-</Text>
+      </TouchableOpacity>
+      <Text style={styles.ageValue}>{age}</Text>
+      <TouchableOpacity
+        style={[styles.ageButton, age >= 120 && { opacity: 0.5 }]}
+        onPress={() => age < 120 && onChange(age + 1)}
+        disabled={age >= 120}
+      >
+        <Text style={styles.ageButtonText}>+</Text>
+      </TouchableOpacity>
+    </View>
+  </>
 );
 
 // Gender Selector
@@ -101,11 +103,11 @@ const BMICalculator = () => {
 
         <View style={styles.inputRow}>
           <View style={styles.inputContainer}>
-            <Text style={[regular,{color: '000000'}]}>Weight in kg</Text>
+            <Text style={[regular, { color: '#000', marginBottom: 8, alignSelf: 'center', marginTop: 8 }]}>Weight in kg</Text>
             <WeightSelector weight={data.weight} onChange={w => updateData('weight', w)} />
           </View>
           <View style={styles.inputContainer}>
-            <Text style={[regular,{color: '000000'}]}>Age</Text>
+            <Text style={[regular, { color: '#000', marginBottom: 8, alignSelf: 'center', marginTop:8}]}>Age</Text>
             <AgeSelector age={data.age} onChange={a => updateData('age', a)} />
           </View>
         </View>

@@ -10,7 +10,6 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  Alert,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
@@ -23,6 +22,7 @@ import {
 import { Formik } from 'formik';
 import { SignInSchema } from '../../utils/Validation';
 import { AuthApi } from '../../Api/AuthApi';
+import AlertModal from '../Modals/AlertModal';
 const { width, height } = Dimensions.get('window');
 
 export default function SignIn() {
@@ -31,6 +31,10 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const { isLogin } = useSelector(state => state.user);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   // Removed AuthContext usage for login
 
@@ -43,7 +47,9 @@ export default function SignIn() {
       dispatch(setIsLogin(true));
       dispatch(setIsUsername(username));
     } catch (error) {
-      Alert.alert('Login Failed', error.message || 'An error occurred');
+      setAlertTitle('Login Failed');
+      setAlertMessage(error.message || 'An error occurred');
+      setAlertVisible(true);
       console.log('Sign in error:', error);
     }
   };
@@ -213,6 +219,13 @@ export default function SignIn() {
           )}
         </View>
       </View>
+
+      <AlertModal
+        visible={alertVisible}
+        onClose={() => setAlertVisible(false)}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+      />
     </View>
   );
 }
