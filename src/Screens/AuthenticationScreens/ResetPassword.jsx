@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import {
   View,
@@ -16,51 +14,72 @@ import { heading, light, medium, normal, regular } from '../../utils/Style';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';
 import { AuthApi } from '../../Api/AuthApi';
+import AlertModal from '../Modals/AlertModal';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertButtonText, setAlertButtonText] = useState('OK');
+  const [onAlertClose, setOnAlertClose] = useState(null);
   const navigation = useNavigation();
   const route = useRoute();
   const { resetToken } = route.params || {};
 
+  const showAlert = ({
+    title = 'Alert',
+    message = '',
+    buttonText = 'OK',
+    onClose = null,
+  }) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setAlertButtonText(buttonText);
+    setOnAlertClose(() => onClose);
+    setAlertVisible(true);
+  };
+
+  const handleAlertClose = () => {
+    setAlertVisible(false);
+    if (onAlertClose) {
+      onAlertClose();
+    }
+  };
+
   const handleResetPassword = async () => {
     if (!password.trim()) {
-      Alert.alert('Error', 'Please enter a new password');
+      showAlert({ title: 'Error', message: 'Please enter a new password' });
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters long');
+      showAlert({ title: 'Error', message: 'Password must be at least 6 characters long' });
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
+      showAlert({ title: 'Error', message: 'Passwords do not match' });
       return;
     }
 
     if (!resetToken) {
-      Alert.alert('Error', 'Reset token not found. Please try the process again.');
+      showAlert({ title: 'Error', message: 'Reset token not found. Please try the process again.' });
       return;
     }
 
     setIsLoading(true);
     try {
       const response = await AuthApi.resetPassword(resetToken, password);
-      Alert.alert(
-        'Success',
-        response.message || 'Password reset successfully',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('SignIn')
-          }
-        ]
-      );
+      showAlert({
+        title: 'Success',
+        message: response.message || 'Password reset successfully',
+        onClose: () => navigation.navigate('SignIn'),
+      });
     } catch (error) {
-      Alert.alert('Error', error.message || 'Password reset failed');
+      showAlert({ title: 'Error', message: error.message || 'Password reset failed' });
     } finally {
       setIsLoading(false);
     }
@@ -109,6 +128,15 @@ const ResetPassword = () => {
           )}
         </TouchableOpacity>
       </View>
+
+      {/* Alert Modal */}
+      <AlertModal
+        visible={alertVisible}
+        onClose={handleAlertClose}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+        buttonText={alertButtonText}
+      />
     </SafeAreaView>
   );
 };

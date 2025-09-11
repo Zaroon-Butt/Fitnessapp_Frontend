@@ -12,10 +12,11 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { normal, regular } from '../../utils/Style'; // Assuming these styles are defined in your Style.js
+import { normal, regular } from '../../utils/Style';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';
 import { AuthApi } from '../../Api/AuthApi';
+import AlertModal from '../Modals/AlertModal';
 
 const OtpScreen = () => {
   const navigation = useNavigation();
@@ -24,37 +25,67 @@ const OtpScreen = () => {
   const inputRefs = useRef([]);
   const [otp, setOtp] = useState(new Array(6).fill(''));
   const [isLoading, setIsLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertButtonText, setAlertButtonText] = useState('OK');
+  const [onAlertClose, setOnAlertClose] = useState(null);
+
+  const showAlert = ({
+    title = 'Alert',
+    message = '',
+    buttonText = 'OK',
+    onClose = null,
+  }) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setAlertButtonText(buttonText);
+    setOnAlertClose(() => onClose);
+    setAlertVisible(true);
+  };
+
+  const handleAlertClose = () => {
+    setAlertVisible(false);
+    if (onAlertClose) {
+      onAlertClose();
+    }
+  };
 
   const handleVerifyOTP = async () => {
     const otpString = otp.join('');
-    
+
     if (otpString.length !== 6) {
-      Alert.alert('Error', 'Please enter the complete 6-digit OTP');
+      showAlert({
+        title: 'Error',
+        message: 'Please enter the complete 6-digit OTP',
+      });
       return;
     }
 
     if (!email) {
-      Alert.alert('Error', 'Email not found. Please go back and try again.');
+      showAlert({
+        title: 'Error',
+        message: 'Email not found. Please go back and try again.',
+      });
       return;
     }
 
     setIsLoading(true);
     try {
       const response = await AuthApi.verifyOTP(email, otpString);
-      Alert.alert(
-        'Success',
-        'OTP verified successfully',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('ResetPassword', { 
-              resetToken: response.resetToken 
-            })
-          }
-        ]
-      );
+      showAlert({
+        title: 'Success',
+        message: 'OTP verified successfully',
+        onClose: () =>
+          navigation.navigate('ResetPassword', {
+            resetToken: response.resetToken,
+          }),
+      });
     } catch (error) {
-      Alert.alert('Error', error.message || 'OTP verification failed');
+      showAlert({
+        title: 'Error',
+        message: error.message || 'OTP verification failed',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -62,21 +93,27 @@ const OtpScreen = () => {
 
   const handleResendOTP = async () => {
     if (!email) {
-      Alert.alert('Error', 'Email not found. Please go back and try again.');
+      showAlert({
+        title: 'Error',
+        message: 'Email not found. Please go back and try again.',
+      });
       return;
     }
 
     setIsLoading(true);
     try {
       await AuthApi.forgotPassword(email);
-      Alert.alert('Success', 'OTP sent again to your email');
+      showAlert({ title: 'Success', message: 'OTP sent again to your email' });
       // Clear current OTP
       setOtp(new Array(6).fill(''));
       if (inputRefs.current[0]) {
         inputRefs.current[0].focus();
       }
     } catch (error) {
-      Alert.alert('Error', error.message || 'Failed to resend OTP');
+      showAlert({
+        title: 'Error',
+        message: error.message || 'Failed to resend OTP',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +126,6 @@ const OtpScreen = () => {
       // Allow clearing the input
       newOtp[index] = '';
       setOtp(newOtp);
-    
     } else if (/^\d$/.test(text)) {
       // Only allow single digits
       newOtp[index] = text;
@@ -160,14 +196,15 @@ const OtpScreen = () => {
           ))}
         </View>
 
-        <TouchableOpacity style={styles.tryAnotherWayButton} onPress={handleResendOTP}>
-          <Text style={regular}>
-            Did You Receive Any Code? Resend OTP
-          </Text>
+        <TouchableOpacity
+          style={styles.tryAnotherWayButton}
+          onPress={handleResendOTP}
+        >
+          <Text style={regular}>Did You Receive Any Code? Resend OTP</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.verifyButton, isLoading && { opacity: 0.7 }]} 
+        <TouchableOpacity
+          style={[styles.verifyButton, isLoading && { opacity: 0.7 }]}
           onPress={handleVerifyOTP}
           disabled={isLoading}
         >
@@ -178,6 +215,15 @@ const OtpScreen = () => {
           )}
         </TouchableOpacity>
       </View>
+
+      {/* Alert Modal */}
+      <AlertModal
+        visible={alertVisible}
+        onClose={handleAlertClose}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+        buttonText={alertButtonText}
+      />
     </SafeAreaView>
   );
 };
@@ -209,7 +255,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 32,
   },
- otpContainer: {
+  otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 45,

@@ -9,47 +9,78 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { heading, light, medium, normal, regular } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';
 import { AuthApi } from '../../Api/AuthApi';
+import AlertModal from '../Modals/AlertModal';
 
 const ForgotPasswordScreen = () => {
+
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertButtonText, setAlertButtonText] = useState('OK');
+  const [onAlertClose, setOnAlertClose] = useState(null);
+
+
+
+
+  const showAlert = ({
+    title = 'Alert',
+    message = '',
+    buttonText = 'OK',
+    onClose = null,
+  }) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setAlertButtonText(buttonText);
+    setOnAlertClose(() => onClose);
+    setAlertVisible(true);
+  };
+
+  const handleAlertClose = () => {
+    setAlertVisible(false);
+    if (onAlertClose) {
+      onAlertClose();
+    }
+  };
 
   const handleSendOTP = async () => {
     if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
+      showAlert({ title: 'Error', message: 'Please enter your email address' });
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
+      showAlert({ title: 'Error', message: 'Please enter a valid email address' });
       return;
     }
 
     setIsLoading(true);
     try {
+      console.log('Sending OTP to:', email);
       const response = await AuthApi.forgotPassword(email);
-      Alert.alert(
-        'Success', 
-        response.message || 'OTP sent to your email successfully',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('OtpScreen', { email })
-          }
-        ]
-      );
+      console.log('OTP Response:', response);
+      showAlert({
+        title: 'Success',
+        message: response.message || 'OTP sent to your email successfully',
+        buttonText: 'OK',
+        onClose: () => {
+          console.log('Navigating to OtpScreen with email:', email);
+          navigation.navigate('OtpScreen', { email });
+        },
+      });
     } catch (error) {
-      Alert.alert('Error', error.message || 'Failed to send OTP');
+      console.error('OTP Error:', error);
+      showAlert({ title: 'Error', message: error.message || 'Failed to send OTP' });
     } finally {
       setIsLoading(false);
     }
@@ -86,9 +117,9 @@ const ForgotPasswordScreen = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.tryAnotherWayButton}>
+        {/* <TouchableOpacity style={styles.tryAnotherWayButton}>
           <Text style={regular}>Try another way</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={[styles.sendButton, isLoading && { opacity: 0.7 }]}
@@ -102,6 +133,15 @@ const ForgotPasswordScreen = () => {
           )}
         </TouchableOpacity>
       </View>
+
+      {/* Alert Modal */}
+      <AlertModal
+        visible={alertVisible}
+        onClose={handleAlertClose}
+        alertTitle={alertTitle}
+        alertMessage={alertMessage}
+        buttonText={alertButtonText}
+      />
     </SafeAreaView>
   );
 };
@@ -137,7 +177,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     lineHeight: 44,
-
     marginBottom: 32,
   },
   subtitle: {
