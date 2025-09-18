@@ -12,13 +12,14 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { SignUpImage, Apple, Google } from '../../utils';
+import { SignUpImage, Apple } from '../../utils';
 import { medium24, regular, regular9 } from '../../utils/Style';
 import { Formik } from 'formik';
 import { SignUpSchema } from '../../utils/Validation';
 import { ProvideContext } from '../../context/ProvideContext';
 import { setIsUsername } from '../../redux/Reducers/userReducer';
 import AlertModal from '../Modals/AlertModal';
+import GoogleButton from '../../Components/Buttons/GoogleButton';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,6 +33,12 @@ export default function SignUp() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  
+  // Google user info state
+  const [googleUserInfo, setGoogleUserInfo] = useState(null);
+  
+  // Debug: Check navigation instance
+  console.log('Navigation available:', !!navigation);
 
   const handleSignUp = async values => {
     try {
@@ -64,12 +71,41 @@ export default function SignUp() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await googleLogin();
-      navigation.navigate('GenderScreen');
-    } catch (error) {
-      console.log('Google sign in error:', error);
+  const handleGoogleSignUpSuccess = (response) => {
+    console.log('SignUp.jsx: Google Sign-Up successful:', JSON.stringify(response, null, 2));
+    
+    // Set username in Redux
+    const username = response.user?.name || response.user?.email.split('@')[0].replace(/[0-9]/g, '');
+    dispatch(setIsUsername(username));
+    
+    // Update onboarding data with Google info
+    const onboardingData = {
+      email: response.user.email,
+      password: `google_auth_${response.user.id}`, // Placeholder password for Google users
+      googleId: response.user.id,
+      name: response.user.name || response.user.email.split('@')[0]
+    };
+    
+    updateOnboarding(onboardingData);
+    
+    // Navigate to the next onboarding screen
+    navigation.navigate('GenderScreen');
+  };
+  
+  const handleGoogleSignUpError = (error) => {
+    console.log('SignUp.jsx: Google Sign-Up error:', error);
+    
+    if (error.code === 7) { // statusCodes.SIGN_IN_CANCELLED
+      // User cancelled the sign-in process
+      console.log('SignUp.jsx: Google sign-in cancelled by user - no alert shown');
+    } else if (error.code === 2) { // statusCodes.PLAY_SERVICES_NOT_AVAILABLE
+      setAlertTitle('Google Services Error');
+      setAlertMessage('Google Play Services is not available or is outdated. Please update Google Play Services and try again.');
+      setAlertVisible(true);
+    } else {
+      setAlertTitle('Google Sign-Up Failed');
+      setAlertMessage(error.message || 'An error occurred during Google sign-up');
+      setAlertVisible(true);
     }
   };
 
@@ -234,13 +270,13 @@ export default function SignUp() {
                   <Image source={Apple} style={{ width: 50, height: 50 }} />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.icon, { left: 80 }]}
-                onPress={handleGoogleSignIn}
-              >
-                <View>
-                  <Image source={Google} style={{ width: 50, height: 50 }} />
-                </View>
+              <TouchableOpacity style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}> 
+                <GoogleButton 
+                  onLoginSuccess={handleGoogleSignUpSuccess}
+                  onLoginError={handleGoogleSignUpError}
+                  buttonStyle={{ backgroundColor: 'transparent', borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
+                  iconOnly={true}
+                />
               </TouchableOpacity>
             </>
           )}

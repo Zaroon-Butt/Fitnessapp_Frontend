@@ -14,15 +14,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { SignInImage, Apple, Google } from '../../utils';
-import {
-  medium24,
-  regular,
-} from '../../utils/Style';
+import { SignInImage, Apple } from '../../utils';
+import { medium24, regular } from '../../utils/Style';
 import { Formik } from 'formik';
 import { SignInSchema } from '../../utils/Validation';
 import { AuthApi } from '../../Api/AuthApi';
 import AlertModal from '../Modals/AlertModal';
+import { ProvideContext } from '../../context/ProvideContext';
+import GoogleButton from '../../Components/Buttons/GoogleButton';
+
 const { width, height } = Dimensions.get('window');
 
 export default function SignIn() {
@@ -35,13 +35,19 @@ export default function SignIn() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  
+  // Access the context
+  const { googleSignIn } = useContext(ProvideContext);
 
   // Removed AuthContext usage for login
 
-  const handleSignIn = async (values) => {
+  const handleSignIn = async values => {
     try {
       setIsLoading(true);
-      const data = await AuthApi.signIn({ email: values.email, password: values.password });
+      const data = await AuthApi.signIn({
+        email: values.email,
+        password: values.password,
+      });
       const username = values.email.split('@')[0].replace(/[0-9]/g, '');
 
       dispatch(setIsLogin(true));
@@ -51,18 +57,36 @@ export default function SignIn() {
       setAlertMessage(error.message || 'An error occurred');
       setAlertVisible(true);
       console.log('Sign in error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await googleLogin();
-      const currentState = store.getState().user;
-      if (currentState.isLogin && !currentState.gender) {
-        navigation.navigate('GenderScreen');
-      }
-    } catch (error) {
-      console.log('Google sign in error:', error);
+  const handleGoogleSignInSuccess = (response) => {
+    console.log('SignIn.jsx: Google Sign-In successful:', JSON.stringify(response, null, 2));
+  };
+  
+  const handleGoogleSignInError = (error) => {
+    console.log('SignIn.jsx: Google Sign-In error:', error);
+    
+    if (error.message === 'Google sign-in was cancelled') {
+      // User cancelled sign-in, no need to show alert
+      console.log('SignIn.jsx: Google sign-in cancelled by user - no alert shown');
+    } else if (error.message === 'User not found. Please sign up first.') {
+      // User needs to sign up first
+      setAlertTitle('Sign Up Required');
+      setAlertMessage('You need to create an account first. Please go to the Sign Up page.');
+      setAlertVisible(true);
+    } else if (error.message?.includes('Play Services')) {
+      // Google Play Services issues
+      setAlertTitle('Google Services Error');
+      setAlertMessage('Google Play Services is not available or is outdated. Please update Google Play Services and try again.');
+      setAlertVisible(true);
+    } else {
+      // Handle other errors
+      setAlertTitle('Google Sign-In Failed');
+      setAlertMessage(error.message || 'An error occurred during Google sign-in');
+      setAlertVisible(true);
     }
   };
 
@@ -131,89 +155,95 @@ export default function SignIn() {
               validationSchema={SignInSchema}
               onSubmit={handleSignIn}
             >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            }) => (
-              <>
-                <ScrollView style={styles.inputContainer}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor="#FFFFFF"
-                    value={values.email}
-                    onChangeText={handleChange('email')}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    onFocus={() => setIsInputFocused(true)}
-                    onBlur={() => {
-                      setIsInputFocused(false);
-                      handleBlur('email');
-                    }}
-                  />
-                  {errors.email && touched.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
-                  )}
-
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    placeholderTextColor="#FFFFFF"
-                    value={values.password}
-                    onChangeText={handleChange('password')}
-                    secureTextEntry
-                    autoCapitalize="none"
-                    onFocus={() => setIsInputFocused(true)}
-                    onBlur={() => {
-                      setIsInputFocused(false);
-                      handleBlur('password');
-                    }}
-                  />
-                  {errors.password && touched.password && (
-                    <Text style={styles.errorText}>{errors.password}</Text>
-                  )}
-
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => navigation.navigate('ForgetPassword')}
-                      style={{
-                        ...regular,
-                        color: '#D0FD3E',
-                        marginTop: 10,
-                        textAlign: 'right',
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <>
+                  <ScrollView style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Email"
+                      placeholderTextColor="#FFFFFF"
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => {
+                        setIsInputFocused(false);
+                        handleBlur('email');
                       }}
-                    >
-                      Forget Password ?
-                    </Text>
-                  </TouchableOpacity>
-                </ScrollView>
+                    />
+                    {errors.email && touched.email && (
+                      <Text style={styles.errorText}>{errors.email}</Text>
+                    )}
 
-                <TouchableOpacity
-                  style={styles.SignInButton}
-                  onPress={handleSubmit}
-                >
-                  <Text style={{ ...regular, color: '#1C1C1E' }}>LOGIN </Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </Formik>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Password"
+                      placeholderTextColor="#FFFFFF"
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      secureTextEntry
+                      autoCapitalize="none"
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => {
+                        setIsInputFocused(false);
+                        handleBlur('password');
+                      }}
+                    />
+                    {errors.password && touched.password && (
+                      <Text style={styles.errorText}>{errors.password}</Text>
+                    )}
+
+                    <TouchableOpacity>
+                      <Text
+                        onPress={() => navigation.navigate('ForgetPassword')}
+                        style={{
+                          ...regular,
+                          color: '#D0FD3E',
+                          marginTop: 10,
+                          textAlign: 'right',
+                        }}
+                      >
+                        Forget Password ?
+                      </Text>
+                    </TouchableOpacity>
+                  </ScrollView>
+
+                  <TouchableOpacity
+                    style={styles.SignInButton}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={{ ...regular, color: '#1C1C1E' }}>LOGIN </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </Formik>
           )}
 
           {!isLoading && (
             <>
-              <TouchableOpacity style={styles.icon} onPress={() => console.log('Apple sign in pressed')}>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => console.log('Apple sign in pressed')}
+              >
                 <View>
                   <Image source={Apple} style={{ width: 50, height: 50 }} />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.icon, { left: 80 }]} onPress={handleGoogleSignIn}>
-                <View>
-                  <Image source={Google} style={{ width: 50, height: 50 }} />
-                </View>
+              <TouchableOpacity style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}> 
+                <GoogleButton 
+                  onLoginSuccess={handleGoogleSignInSuccess}
+                  onLoginError={handleGoogleSignInError}
+                  buttonStyle={{ backgroundColor: 'transparent', borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
+                  iconOnly={true}
+                />
               </TouchableOpacity>
             </>
           )}
@@ -324,7 +354,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
- 
+
   icon: {
     position: 'absolute',
     bottom: 20,

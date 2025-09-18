@@ -42,43 +42,108 @@ export const ProvideProvider = ({ children }) => {
 
 	// Submit onboarding data to API
 	const submitOnboarding = async (extra = {}) => {
+		console.log('=== ProvideContext.submitOnboarding STARTED ===');
 		setIsLoading(true);
 		setError(null);
 		try {
 			// Merge extra data with onboarding data
 			const mergedData = { ...onboarding, ...extra };
+			console.log('ProvideContext: Onboarding state:', JSON.stringify(onboarding, null, 2));
+			console.log('ProvideContext: Extra data:', JSON.stringify(extra, null, 2));
+			console.log('ProvideContext: Merged data:', JSON.stringify(mergedData, null, 2));
 			
-			const payload = { 
-				email: mergedData.email,
-				password: mergedData.password,
-				Gender: mergedData.gender,
-				Age: parseInt(mergedData.age) || 0, // Ensure it's a number
-				Height: parseInt(mergedData.height) || 0, // Ensure it's a number
-				Goal: mergedData.goal,
-				ActivityLevel: mergedData.activityLevel,
-				Weight: parseInt(mergedData.weight) || 0, // Ensure it's a number
-				isPro: mergedData.isPro || false,
-			};
+			// Check if this is a Google sign-up
+			const isGoogleAuth = mergedData.email && mergedData.password && mergedData.password.startsWith('google_auth_') && mergedData.googleId;
+			console.log('ProvideContext: Checking authentication type...');
+			console.log('ProvideContext: Has email:', !!mergedData.email);
+			console.log('ProvideContext: Has password:', !!mergedData.password);
+			console.log('ProvideContext: Password starts with google_auth_:', mergedData.password && mergedData.password.startsWith('google_auth_'));
+			console.log('ProvideContext: Has googleId:', !!mergedData.googleId);
+			console.log('ProvideContext: Is Google auth:', isGoogleAuth);
 			
-			// console.log('=== SUBMITTING ONBOARDING PAYLOAD ===');
-			// console.log('Full payload:', JSON.stringify(payload, null, 2));
-			// console.log('Original onboarding state:', JSON.stringify(onboarding, null, 2));
-			// console.log('Extra data:', JSON.stringify(extra, null, 2));
-			// console.log('Merged data:', JSON.stringify(mergedData, null, 2));
-			
-			const requiredFields = ['email', 'password', 'Gender', 'Age', 'Height', 'Goal', 'ActivityLevel', 'Weight'];
-			const missingFields = requiredFields.filter(field => !payload[field] || payload[field] === '');
-			if (missingFields.length > 0) {
-				console.log('Missing required fields:', missingFields);
-				throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+			if (isGoogleAuth) {
+				console.log('ProvideContext: Google authentication detected - processing Google sign-up');
+				// Handle Google sign-up
+				const googleData = {
+					userInfo: {
+						user: {
+							email: mergedData.email,
+							id: mergedData.googleId,
+							name: mergedData.name || mergedData.email.split('@')[0]
+						}
+					},
+					Gender: mergedData.gender,
+					Age: parseInt(mergedData.age) || 0,
+					Height: parseInt(mergedData.height) || 0,
+					Goal: mergedData.goal,
+					ActivityLevel: mergedData.activityLevel,
+					Weight: parseInt(mergedData.weight) || 0,
+				};
+				
+				console.log('ProvideContext: Prepared Google data for googleSignUp:');
+				console.log('ProvideContext: UserInfo:', JSON.stringify(googleData.userInfo, null, 2));
+				console.log('ProvideContext: Gender:', googleData.Gender);
+				console.log('ProvideContext: Age:', googleData.Age);
+				console.log('ProvideContext: Height:', googleData.Height);
+				console.log('ProvideContext: Goal:', googleData.Goal);
+				console.log('ProvideContext: ActivityLevel:', googleData.ActivityLevel);
+				console.log('ProvideContext: Weight:', googleData.Weight);
+				console.log('ProvideContext: Full googleData:', JSON.stringify(googleData, null, 2));
+				
+				console.log('ProvideContext: Calling googleSignUp function...');
+				const data = await googleSignUp(googleData);
+				console.log('ProvideContext: googleSignUp completed successfully');
+				setUser(data.user || data);
+				setIsLoading(false);
+				console.log('=== ProvideContext.submitOnboarding (Google) COMPLETED SUCCESSFULLY ===');
+				return data;
+			} else {
+				console.log('ProvideContext: Regular authentication detected - processing normal sign-up');
+				// Handle regular sign-up
+				const payload = { 
+					email: mergedData.email,
+					password: mergedData.password,
+					Gender: mergedData.gender,
+					Age: parseInt(mergedData.age) || 0,
+					Height: parseInt(mergedData.height) || 0,
+					Goal: mergedData.goal,
+					ActivityLevel: mergedData.activityLevel,
+					Weight: parseInt(mergedData.weight) || 0,
+					isPro: mergedData.isPro || false,
+				};
+				
+				console.log('ProvideContext: Prepared regular signup payload:');
+				console.log('ProvideContext: Email:', payload.email);
+				console.log('ProvideContext: Password length:', payload.password ? payload.password.length : 0);
+				console.log('ProvideContext: Gender:', payload.Gender);
+				console.log('ProvideContext: Age:', payload.Age);
+				console.log('ProvideContext: Height:', payload.Height);
+				console.log('ProvideContext: Goal:', payload.Goal);
+				console.log('ProvideContext: ActivityLevel:', payload.ActivityLevel);
+				console.log('ProvideContext: Weight:', payload.Weight);
+				console.log('ProvideContext: isPro:', payload.isPro);
+				console.log('ProvideContext: Full payload:', JSON.stringify(payload, null, 2));
+				
+				const requiredFields = ['email', 'password', 'Gender', 'Age', 'Height', 'Goal', 'ActivityLevel', 'Weight'];
+				const missingFields = requiredFields.filter(field => !payload[field] && payload[field] !== 0);
+				if (missingFields.length > 0) {
+					console.log('ProvideContext: ERROR - Missing required fields:', missingFields);
+					throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+				}
+				
+				console.log('ProvideContext: All required fields present, calling AuthApi.signUp...');
+				const data = await AuthApi.signUp(payload);
+				console.log('ProvideContext: AuthApi.signUp completed successfully');
+				setUser(data.user || data);
+				setIsLoading(false);
+				console.log('=== ProvideContext.submitOnboarding (Regular) COMPLETED SUCCESSFULLY ===');
+				return data;
 			}
-			
-			const data = await AuthApi.signUp(payload);
-			setUser(data.user || data);
-			setIsLoading(false);
-			return data;
 		} catch (err) {
-			console.log('Error in submitOnboarding:', err);
+			console.log('=== ProvideContext.submitOnboarding ERROR ===');
+			console.log('ProvideContext: Error in submitOnboarding:', err);
+			console.log('ProvideContext: Error message:', err.message);
+			console.log('ProvideContext: Full error details:', JSON.stringify(err, null, 2));
 			setError(err.message);
 			setIsLoading(false);
 			throw err;
@@ -117,6 +182,86 @@ export const ProvideProvider = ({ children }) => {
 		}
 	};
 
+	// Google Sign-In (for existing users)
+	const googleSignIn = async () => {
+		console.log('=== ProvideContext.googleSignIn STARTED ===');
+		setIsLoading(true);
+		setError(null);
+		try {
+			console.log('ProvideContext: Setting loading state and clearing errors');
+			console.log('ProvideContext: Calling AuthApi.googleSignIn...');
+			const data = await AuthApi.googleSignIn();
+			console.log('ProvideContext: AuthApi.googleSignIn returned successfully');
+			console.log('ProvideContext: Response data type:', typeof data);
+			console.log('ProvideContext: Response data keys:', Object.keys(data || {}));
+			console.log('ProvideContext: Full response data:', JSON.stringify(data, null, 2));
+			
+			console.log('ProvideContext: Setting user state...');
+			setUser(data.user || data);
+			console.log('ProvideContext: User state set to:', data.user || data);
+			
+			console.log('ProvideContext: Setting loading to false');
+			setIsLoading(false);
+			console.log('=== ProvideContext.googleSignIn COMPLETED SUCCESSFULLY ===');
+			return data;
+		} catch (err) {
+			console.log('=== ProvideContext.googleSignIn ERROR ===');
+			console.log('ProvideContext: Error object:', err);
+			console.log('ProvideContext: Error message:', err.message);
+			console.log('ProvideContext: Error code:', err.code);
+			console.log('ProvideContext: Full error details:', JSON.stringify(err, null, 2));
+			
+			console.log('ProvideContext: Setting error state to:', err.message);
+			setError(err.message);
+			console.log('ProvideContext: Setting loading to false');
+			setIsLoading(false);
+			console.log('ProvideContext: Throwing error up the chain');
+			throw err;
+		}
+	};
+
+	// Google Sign-Up (for new users with onboarding data)
+	const googleSignUp = async (userData) => {
+		console.log('=== ProvideContext.googleSignUp STARTED ===');
+		setIsLoading(true);
+		setError(null);
+		try {
+			console.log('ProvideContext: Setting loading state and clearing errors');
+			console.log('ProvideContext: Input userData type:', typeof userData);
+			console.log('ProvideContext: Input userData keys:', Object.keys(userData || {}));
+			console.log('ProvideContext: Full input userData:', JSON.stringify(userData, null, 2));
+			
+			console.log('ProvideContext: Calling AuthApi.googleSignUp...');
+			const data = await AuthApi.googleSignUp(userData);
+			console.log('ProvideContext: AuthApi.googleSignUp returned successfully');
+			console.log('ProvideContext: Response data type:', typeof data);
+			console.log('ProvideContext: Response data keys:', Object.keys(data || {}));
+			console.log('ProvideContext: Full response data:', JSON.stringify(data, null, 2));
+			
+			console.log('ProvideContext: Setting user state...');
+			setUser(data.user || data);
+			console.log('ProvideContext: User state set to:', data.user || data);
+			
+			console.log('ProvideContext: Setting loading to false');
+			setIsLoading(false);
+			console.log('=== ProvideContext.googleSignUp COMPLETED SUCCESSFULLY ===');
+			return data;
+		} catch (err) {
+			console.log('=== ProvideContext.googleSignUp ERROR ===');
+			console.log('ProvideContext: Error object:', err);
+			console.log('ProvideContext: Error message:', err.message);
+			console.log('ProvideContext: Error code:', err.code);
+			console.log('ProvideContext: Full error details:', JSON.stringify(err, null, 2));
+			
+			console.log('ProvideContext: Setting error state to:', err.message);
+			setError(err.message);
+			console.log('ProvideContext: Setting loading to false');
+			setIsLoading(false);
+			console.log('ProvideContext: Throwing error up the chain');
+			throw err;
+		}
+	};
+
 	// Logout user (clear state)
 	const logout = () => {
 		setUser(null);
@@ -145,6 +290,8 @@ export const ProvideProvider = ({ children }) => {
 				submitOnboarding,
 				register,
 				login,
+				googleSignIn,
+				googleSignUp,
 				logout,
 				setUser,
 			}}

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FitnessApp</string>
+    <!-- Google OAuth Client ID for Android -->
+    <string name="google_android_client_id">388160774607-lhagpn05u1dq3ps9o2rl8jhlg5ou84ct.apps.googleusercontent.com</string>
+    <!-- Google OAuth Client ID for Web (used by React Native) -->
+    <string name="google_web_client_id">388160774607-7sinalrpogb7l7pkaqalv0voktuifsvr.apps.googleusercontent.com</string>
 </resources>
