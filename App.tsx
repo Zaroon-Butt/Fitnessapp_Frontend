@@ -10,10 +10,7 @@ import SplashScreen from './src/Screens/SplashScreen.jsx';
 import Routes from './src/routes/Routes.jsx';
 import { ProvideProvider } from './src/context/ProvideContext.jsx';
 import { initializeNotifications } from './src/utils/NotificationService';
-import { configureGoogleSignIn } from './src/utils/GoogleSignIn';
 
-// Configure Google Sign-In at app startup
-configureGoogleSignIn();
 
 export default function App() {
   const [isSplashScreenVisible, setSplashScreenVisible] = useState(true);

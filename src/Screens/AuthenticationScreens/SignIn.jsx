@@ -14,14 +14,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { SignInImage, Apple } from '../../utils';
+import { SignInImage, Apple, Google } from '../../utils';
 import { medium24, regular } from '../../utils/Style';
 import { Formik } from 'formik';
 import { SignInSchema } from '../../utils/Validation';
 import { AuthApi } from '../../Api/AuthApi';
 import AlertModal from '../Modals/AlertModal';
 import { ProvideContext } from '../../context/ProvideContext';
-import GoogleButton from '../../Components/Buttons/GoogleButton';
+import { GoogleLogin } from '../../utils/GoogleAuth';
 
 const { width, height } = Dimensions.get('window');
 
@@ -36,10 +36,86 @@ export default function SignIn() {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   
-  // Access the context
-  const { googleSignIn } = useContext(ProvideContext);
-
-  // Removed AuthContext usage for login
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Get user info using the GoogleLogin utility
+      const userInfo = await GoogleLogin();
+      
+      console.log('Google sign-in userInfo:', JSON.stringify(userInfo, null, 2));
+      
+      // Check if userInfo and user property exist - handle both direct user and data.user structures
+      let userData = null;
+      if (userInfo && userInfo.data && userInfo.data.user) {
+        userData = userInfo.data.user; // New structure from logs
+      } else if (userInfo && userInfo.user) {
+        userData = userInfo.user; // Fallback to direct structure
+      } else {
+        console.log('GoogleSignIn: Invalid userInfo structure:', userInfo);
+        throw new Error('Failed to get user information from Google');
+      }
+      
+      // Extract user information safely
+      const userId = userData.id || '';
+      const userEmail = userData.email || '';
+      const userName = userData.name || '';
+      
+      console.log('GoogleSignIn: User data extracted:');
+      console.log('- User ID:', userId);
+      console.log('- User Email:', userEmail);
+      console.log('- User Name:', userName);
+      
+      // Validate the minimum required user information
+      if (!userEmail) {
+        console.log('GoogleSignIn: Missing email in user data');
+        throw new Error('Google sign-in requires an email address');
+      }
+      
+      // Get the ID token from the userInfo
+      let idToken = '';
+      if (userInfo && userInfo.data && userInfo.data.idToken) {
+        idToken = userInfo.data.idToken; // New structure from logs
+      } else if (userInfo && userInfo.idToken) {
+        idToken = userInfo.idToken; // Fallback to direct structure
+      } else {
+        console.log('GoogleSignIn: Missing ID token in userInfo');
+        throw new Error('Failed to get ID token from Google');
+      }
+      
+      console.log('GoogleSignIn: ID Token available:', idToken ? 'Yes' : 'No');
+      
+      // Call the regular sign-in API with email and ID token as password
+      const response = await AuthApi.signIn({
+        email: userEmail,
+        password: idToken // Use Google ID token as password
+      });
+      
+      // Extract username safely
+      let username = '';
+      if (userName) {
+        username = userName;
+      } else if (userEmail) {
+        username = userEmail.split('@')[0].replace(/[0-9]/g, '');
+      } else {
+        username = 'GoogleUser';
+      }
+      
+      // Update Redux state to log in the user
+      dispatch(setIsLogin(true));
+      dispatch(setIsUsername(username));
+    } catch (error) {
+      // Don't show error for cancelled sign-in (code 7)
+      if (error.code !== 7) {
+        setAlertTitle('Google Login Failed');
+        setAlertMessage(error.message || 'An error occurred during Google sign-in');
+        setAlertVisible(true);
+      }
+      console.log('Google sign in error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSignIn = async values => {
     try {
@@ -62,33 +138,7 @@ export default function SignIn() {
     }
   };
 
-  const handleGoogleSignInSuccess = (response) => {
-    console.log('SignIn.jsx: Google Sign-In successful:', JSON.stringify(response, null, 2));
-  };
-  
-  const handleGoogleSignInError = (error) => {
-    console.log('SignIn.jsx: Google Sign-In error:', error);
-    
-    if (error.message === 'Google sign-in was cancelled') {
-      // User cancelled sign-in, no need to show alert
-      console.log('SignIn.jsx: Google sign-in cancelled by user - no alert shown');
-    } else if (error.message === 'User not found. Please sign up first.') {
-      // User needs to sign up first
-      setAlertTitle('Sign Up Required');
-      setAlertMessage('You need to create an account first. Please go to the Sign Up page.');
-      setAlertVisible(true);
-    } else if (error.message?.includes('Play Services')) {
-      // Google Play Services issues
-      setAlertTitle('Google Services Error');
-      setAlertMessage('Google Play Services is not available or is outdated. Please update Google Play Services and try again.');
-      setAlertVisible(true);
-    } else {
-      // Handle other errors
-      setAlertTitle('Google Sign-In Failed');
-      setAlertMessage(error.message || 'An error occurred during Google sign-in');
-      setAlertVisible(true);
-    }
-  };
+ 
 
   return (
     <View style={styles.container}>
@@ -237,13 +287,13 @@ export default function SignIn() {
                   <Image source={Apple} style={{ width: 50, height: 50 }} />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}> 
-                <GoogleButton 
-                  onLoginSuccess={handleGoogleSignInSuccess}
-                  onLoginError={handleGoogleSignInError}
-                  buttonStyle={{ backgroundColor: 'transparent', borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
-                  iconOnly={true}
-                />
+              <TouchableOpacity 
+                style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}
+                onPress={handleGoogleSignIn}
+              > 
+                <View>
+                  <Image source={Google} style={{ width: 50, height: 50 }} />
+                </View>
               </TouchableOpacity>
             </>
           )}

@@ -12,14 +12,14 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { SignUpImage, Apple } from '../../utils';
+import { SignUpImage, Apple, Google } from '../../utils';
 import { medium24, regular, regular9 } from '../../utils/Style';
 import { Formik } from 'formik';
 import { SignUpSchema } from '../../utils/Validation';
 import { ProvideContext } from '../../context/ProvideContext';
 import { setIsUsername } from '../../redux/Reducers/userReducer';
 import AlertModal from '../Modals/AlertModal';
-import GoogleButton from '../../Components/Buttons/GoogleButton';
+import { GoogleLogin } from '../../utils/GoogleAuth';
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,11 +34,92 @@ export default function SignUp() {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   
-  // Google user info state
-  const [googleUserInfo, setGoogleUserInfo] = useState(null);
-  
-  // Debug: Check navigation instance
-  console.log('Navigation available:', !!navigation);
+  // Handle Google Sign-Up
+  const handleGoogleSignUp = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Get user info using the GoogleLogin utility
+      const userInfo = await GoogleLogin();
+      
+      console.log('Google sign-up userInfo:', JSON.stringify(userInfo, null, 2));
+      
+      // Check if userInfo and user property exist - handle both direct user and data.user structures
+      let userData = null;
+      if (userInfo && userInfo.data && userInfo.data.user) {
+        userData = userInfo.data.user; // New structure from logs
+      } else if (userInfo && userInfo.user) {
+        userData = userInfo.user; // Fallback to direct structure
+      } else {
+        console.log('GoogleSignUp: Invalid userInfo structure:', userInfo);
+        throw new Error('Failed to get user information from Google');
+      }
+      
+      // Extract user information safely
+      const userId = userData.id || '';
+      const userEmail = userData.email || '';
+      const userName = userData.name || '';
+      
+      console.log('GoogleSignUp: User data extracted:');
+      console.log('- User ID:', userId);
+      console.log('- User Email:', userEmail);
+      console.log('- User Name:', userName);
+      
+      // Validate the minimum required user information
+      if (!userEmail) {
+        console.log('GoogleSignUp: Missing email in user data');
+        throw new Error('Google sign-up requires an email address');
+      }
+      
+      // Get the ID token from the userInfo
+      let idToken = '';
+      if (userInfo && userInfo.data && userInfo.data.idToken) {
+        idToken = userInfo.data.idToken; // New structure from logs
+      } else if (userInfo && userInfo.idToken) {
+        idToken = userInfo.idToken; // Fallback to direct structure
+      } else {
+        console.log('GoogleSignUp: Missing ID token in userInfo');
+        // Don't throw error for SignUp, just proceed without token
+      }
+      
+      console.log('GoogleSignUp: ID Token available:', idToken ? 'Yes' : 'No');
+      
+      // Extract username safely
+      let username = '';
+      if (userName) {
+        username = userName;
+      } else if (userEmail) {
+        username = userEmail.split('@')[0].replace(/[0-9]/g, '');
+      } else {
+        username = 'GoogleUser';
+      }
+      
+      // Update username in Redux
+      dispatch(setIsUsername(username));
+      
+      // Update onboarding data with Google info including ID token as password
+      updateOnboarding({
+        email: userEmail,
+        password: idToken, // Store ID token as password for backend
+        googleId: userId,
+        name: username,
+        authProvider: 'google'
+      });
+      
+      // Navigate to the next onboarding screen
+      navigation.navigate('GenderScreen');
+    } catch (error) {
+      // Don't show error for cancelled sign-in (code 7)
+      if (error.code !== 7) {
+        setAlertTitle('Google Sign-Up Failed');
+        setAlertMessage(error.message || 'An error occurred during Google sign-up');
+        setAlertVisible(true);
+      }
+      console.log('Google sign up error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSignUp = async values => {
     try {
@@ -67,44 +148,6 @@ export default function SignUp() {
       setIsLoading(false);
       setAlertTitle('Error');
       setAlertMessage(error.message || 'An error occurred while checking email');
-      setAlertVisible(true);
-    }
-  };
-
-  const handleGoogleSignUpSuccess = (response) => {
-    console.log('SignUp.jsx: Google Sign-Up successful:', JSON.stringify(response, null, 2));
-    
-    // Set username in Redux
-    const username = response.user?.name || response.user?.email.split('@')[0].replace(/[0-9]/g, '');
-    dispatch(setIsUsername(username));
-    
-    // Update onboarding data with Google info
-    const onboardingData = {
-      email: response.user.email,
-      password: `google_auth_${response.user.id}`, // Placeholder password for Google users
-      googleId: response.user.id,
-      name: response.user.name || response.user.email.split('@')[0]
-    };
-    
-    updateOnboarding(onboardingData);
-    
-    // Navigate to the next onboarding screen
-    navigation.navigate('GenderScreen');
-  };
-  
-  const handleGoogleSignUpError = (error) => {
-    console.log('SignUp.jsx: Google Sign-Up error:', error);
-    
-    if (error.code === 7) { // statusCodes.SIGN_IN_CANCELLED
-      // User cancelled the sign-in process
-      console.log('SignUp.jsx: Google sign-in cancelled by user - no alert shown');
-    } else if (error.code === 2) { // statusCodes.PLAY_SERVICES_NOT_AVAILABLE
-      setAlertTitle('Google Services Error');
-      setAlertMessage('Google Play Services is not available or is outdated. Please update Google Play Services and try again.');
-      setAlertVisible(true);
-    } else {
-      setAlertTitle('Google Sign-Up Failed');
-      setAlertMessage(error.message || 'An error occurred during Google sign-up');
       setAlertVisible(true);
     }
   };
@@ -270,13 +313,13 @@ export default function SignUp() {
                   <Image source={Apple} style={{ width: 50, height: 50 }} />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}> 
-                <GoogleButton 
-                  onLoginSuccess={handleGoogleSignUpSuccess}
-                  onLoginError={handleGoogleSignUpError}
-                  buttonStyle={{ backgroundColor: 'transparent', borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
-                  iconOnly={true}
-                />
+              <TouchableOpacity 
+                style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}
+                onPress={handleGoogleSignUp}
+              > 
+               <View>
+                  <Image source={Google} style={{ width: 50, height: 50 }} />
+                </View>
               </TouchableOpacity>
             </>
           )}
