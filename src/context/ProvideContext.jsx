@@ -151,35 +151,17 @@ export const ProvideProvider = ({ children }) => {
 		setIsLoading(true);
 		setError(null);
 		try {
-			console.log('ProvideContext: Setting loading state and clearing errors');
-			console.log('ProvideContext: Calling AuthApi.googleSignIn...');
 			const data = await AuthApi.googleSignIn();
-			console.log('ProvideContext: AuthApi.googleSignIn returned successfully');
-			console.log('ProvideContext: Response data type:', typeof data);
-			console.log('ProvideContext: Response data keys:', Object.keys(data || {}));
-			console.log('ProvideContext: Full response data:', JSON.stringify(data, null, 2));
-			
-			console.log('ProvideContext: Setting user state...');
 			setUser(data.user || data);
-			console.log('ProvideContext: User state set to:', data.user || data);
-			
-			console.log('ProvideContext: Setting loading to false');
 			setIsLoading(false);
 			console.log('=== ProvideContext.googleSignIn COMPLETED SUCCESSFULLY ===');
 			return data;
 		} catch (err) {
-			console.log('=== ProvideContext.googleSignIn ERROR ===');
-			console.log('ProvideContext: Error object:', err);
-			console.log('ProvideContext: Error message:', err.message);
-			console.log('ProvideContext: Error code:', err.code);
-			console.log('ProvideContext: Full error details:', JSON.stringify(err, null, 2));
-			
 			console.log('ProvideContext: Setting error state to:', err.message);
 			setError(err.message);
 			console.log('ProvideContext: Setting loading to false');
 			setIsLoading(false);
-			console.log('ProvideContext: Throwing error up the chain');
-			throw err;
+		
 		}
 	};
 
@@ -189,39 +171,17 @@ export const ProvideProvider = ({ children }) => {
 		setIsLoading(true);
 		setError(null);
 		try {
-			console.log('ProvideContext: Setting loading state and clearing errors');
-			console.log('ProvideContext: Input userData type:', typeof userData);
-			console.log('ProvideContext: Input userData keys:', Object.keys(userData || {}));
-			console.log('ProvideContext: Full input userData:', JSON.stringify(userData, null, 2));
-			
-			console.log('ProvideContext: Calling AuthApi.googleSignUp...');
 			const data = await AuthApi.googleSignUp(userData);
-			console.log('ProvideContext: AuthApi.googleSignUp returned successfully');
-			console.log('ProvideContext: Response data type:', typeof data);
-			console.log('ProvideContext: Response data keys:', Object.keys(data || {}));
-			console.log('ProvideContext: Full response data:', JSON.stringify(data, null, 2));
-			
-			console.log('ProvideContext: Setting user state...');
 			setUser(data.user || data);
-			console.log('ProvideContext: User state set to:', data.user || data);
-			
-			console.log('ProvideContext: Setting loading to false');
 			setIsLoading(false);
-			console.log('=== ProvideContext.googleSignUp COMPLETED SUCCESSFULLY ===');
 			return data;
 		} catch (err) {
-			console.log('=== ProvideContext.googleSignUp ERROR ===');
-			console.log('ProvideContext: Error object:', err);
-			console.log('ProvideContext: Error message:', err.message);
-			console.log('ProvideContext: Error code:', err.code);
-			console.log('ProvideContext: Full error details:', JSON.stringify(err, null, 2));
 			
 			console.log('ProvideContext: Setting error state to:', err.message);
 			setError(err.message);
 			console.log('ProvideContext: Setting loading to false');
 			setIsLoading(false);
-			console.log('ProvideContext: Throwing error up the chain');
-			throw err;
+		
 		}
 	};
 

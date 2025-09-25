@@ -71,6 +71,16 @@ export default function SignUp() {
         throw new Error('Google sign-up requires an email address');
       }
       
+      // Check if email already exists before proceeding
+      const emailCheck = await checkEmail(userEmail);
+      if (emailCheck.exists) {
+        setAlertTitle('Email Exists');
+        setAlertMessage('This email is already registered. Please try signing in instead.');
+        setAlertVisible(true);
+        setIsLoading(false);
+        return; // Stop here if email exists
+      }
+      
       // Get the ID token from the userInfo
       let idToken = '';
       if (userInfo && userInfo.data && userInfo.data.idToken) {
@@ -106,7 +116,7 @@ export default function SignUp() {
         authProvider: 'google'
       });
       
-      // Navigate to the next onboarding screen
+      // Navigate to the next onboarding screen only if email doesn't exist
       navigation.navigate('GenderScreen');
     } catch (error) {
       // Don't show error for cancelled sign-in (code 7)
