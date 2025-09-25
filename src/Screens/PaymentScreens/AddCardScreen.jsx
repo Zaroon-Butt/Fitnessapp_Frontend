@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { normal } from '../../utils/Style';
+import { normal, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import BankCard from '../../Components/Cards/BankCard';
@@ -113,7 +113,7 @@ const AddCard = () => {
               }
             }}
           >
-            <Text style={styles.buttonText}>Done</Text>
+            <Text style={[regular16, { color: '#000' }]}>Done</Text>
           </BigButton>
         </View>
       </ScrollView>

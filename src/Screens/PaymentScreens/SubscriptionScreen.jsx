@@ -68,7 +68,7 @@ export default function SubscriptionScreen() {
             />
             <View>
               <Text style={[regular, { textAlign: 'left' }]}>Monthly</Text>
-              <Text style={regular9}>Pay monthly cancel any time</Text>
+              <Text style={[regular9, { textAlign: 'left' }]}>Pay monthly cancel any time</Text>
             </View>
           </View>
           <Text style={styles.planPrice}>

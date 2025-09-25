@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-const BASE_URL = 'http://10.0.2.2:3000/api/auth';
-// const BASE_URL = 'http://localhost:3000/api/auth';
+// const BASE_URL = 'http://10.0.2.2:3000/api/auth';
+const BASE_URL = 'http://localhost:3000/api/auth';
 
 const api = axios.create({
   baseURL: BASE_URL,

@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   categoryButton: {
     flex: 1,
-    paddingHorizontal: 14,
+    paddingHorizontal: 8,
   },
   selectedButton: {
     backgroundColor: '#d0fd3e',
