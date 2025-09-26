@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import BackButton from '../../Components/Buttons/BackButton';
 import NextButton from '../../Components/Buttons/NextButton';
 import { medium, regular } from '../../utils/Style';
-import { setIsLogin, setIsOnboarding, setIsPro } from '../../redux/Reducers/userReducer';
+import { setIsLogin, setIsOnboarding, setIsPro, setUserId } from '../../redux/Reducers/userReducer';
 import { ProvideContext } from '../../context/ProvideContext';
 import AlertModal from '../Modals/AlertModal';
 
@@ -127,6 +127,16 @@ const WeightInputScreen = () => {
       const response = await submitOnboarding({ weight: selectedWeight });
       
       console.log('API response:', response);
+      
+      // Extract user ID from response (adjust based on your backend response structure)
+      const userId = response.user?.id || response.user?._id || response.userId || response.id;
+      
+      if (userId) {
+        dispatch(setUserId(userId));
+        console.log('User ID stored in Redux from signup:', userId);
+      } else {
+        console.warn('No user ID found in signup response:', response);
+      }
       
       // Complete onboarding and set login state
       console.log('Setting onboarding complete and login to true');

@@ -99,6 +99,11 @@ export const ProvideProvider = ({ children }) => {
 			const data = await AuthApi.signUp(payload);
 			console.log('ProvideContext: AuthApi.signUp completed successfully');
 			setUser(data.user || data);
+			// Log user id and isPro after sign up
+			const userData = data.user || data;
+			if (userData) {
+				console.log('User signed up. ID=============================:', userData.id || userData._id, 'isPro:', userData.isPro);
+			}
 			setIsLoading(false);
 			console.log('=== ProvideContext.submitOnboarding COMPLETED SUCCESSFULLY ===');
 			return data;
@@ -120,6 +125,11 @@ export const ProvideProvider = ({ children }) => {
 		try {
 			const data = await AuthApi.signUp(values);
 			setUser(data.user || data);
+			// Log user id and isPro after sign in
+			const userData = data.user || data;
+			if (userData) {
+				console.log('User signed in. ID=============================:', userData.id || userData._id, 'isPro:', userData.isPro);
+			}
 			setIsLoading(false);
 			return data;
 		} catch (err) {

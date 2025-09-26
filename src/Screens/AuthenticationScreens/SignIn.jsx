@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../redux/store';
-import { setIsLogin, setIsUsername } from '../../redux/Reducers/userReducer';
+import { setIsLogin, setIsUsername, setUserId, setIsPro, setIsSubscription } from '../../redux/Reducers/userReducer';
 import {
   View,
   Text,
@@ -20,7 +20,6 @@ import { Formik } from 'formik';
 import { SignInSchema } from '../../utils/Validation';
 import { AuthApi } from '../../Api/AuthApi';
 import AlertModal from '../Modals/AlertModal';
-import { ProvideContext } from '../../context/ProvideContext';
 import { GoogleLogin } from '../../utils/GoogleAuth';
 
 const { width, height } = Dimensions.get('window');
@@ -57,12 +56,12 @@ export default function SignIn() {
       }
       
       // Extract user information safely
-      const userId = userData.id || '';
+      const googleUserId = userData.id || '';
       const userEmail = userData.email || '';
       const userName = userData.name || '';
       
       console.log('GoogleSignIn: User data extracted:');
-      console.log('- User ID:', userId);
+      console.log('- User ID:', googleUserId);
       console.log('- User Email:', userEmail);
       console.log('- User Name:', userName);
       
@@ -90,6 +89,20 @@ export default function SignIn() {
         email: userEmail,
         password: idToken // Use Google ID token as password
       });
+
+    
+
+      console.log('Google login response data:', JSON.stringify(response, null, 2));
+      
+      // Extract user ID from response (adjust based on your backend response structure)
+      const userId = response.user?.id || response.user?._id || response.userId || response.id;
+      
+      if (userId) {
+        dispatch(setUserId(userId));
+        console.log('Google User ID stored in Redux:', userId);
+      } else {
+        console.warn('No user ID found in Google login response:', response);
+      }
       
       // Extract username safely
       let username = '';
@@ -101,9 +114,17 @@ export default function SignIn() {
         username = 'GoogleUser';
       }
       
+      // Extract isPro status from response (adjust based on your backend response structure)
+      const isPro = response.user?.isPro !== undefined ? response.user.isPro : false;
+      console.log('Google isPro value from response:', isPro);
+      console.log('Google isPro type:', typeof isPro);
+      
       // Update Redux state to log in the user
       dispatch(setIsLogin(true));
       dispatch(setIsUsername(username));
+      dispatch(setIsPro(isPro));
+      dispatch(setIsSubscription(isPro)); // Assuming subscription status is same as isPro for now
+      console.log('Google isPro dispatched to Redux:', isPro);
     } catch (error) {
       // Don't show error for cancelled sign-in (code 7)
       if (error.code !== 7) {
@@ -126,8 +147,28 @@ export default function SignIn() {
       });
       const username = values.email.split('@')[0].replace(/[0-9]/g, '');
 
+      console.log('Login response data:', JSON.stringify(data, null, 2));
+      
+      // Extract user ID from response (adjust based on your backend response structure)
+      const userId = data.user?.id || data.user?._id || data.userId || data.id;
+      
+      if (userId) {
+        dispatch(setUserId(userId));
+        console.log('User ID stored in Redux:', userId);
+      } else {
+        console.warn('No user ID found in login response:', data);
+      }
+
+      // Extract isPro status from response (adjust based on your backend response structure)
+      const isPro = data.user?.isPro !== undefined ? data.user.isPro : false;
+      console.log('isPro value from response:', isPro);
+      console.log('isPro type:', typeof isPro);
+
       dispatch(setIsLogin(true));
       dispatch(setIsUsername(username));
+      dispatch(setIsPro(isPro));
+      dispatch(setIsSubscription(isPro)); // Assuming subscription status is same as isPro for now
+      console.log('isPro dispatched to Redux:', isPro);
     } catch (error) {
       setAlertTitle('Login Failed');
       setAlertMessage(error.message || 'An error occurred');

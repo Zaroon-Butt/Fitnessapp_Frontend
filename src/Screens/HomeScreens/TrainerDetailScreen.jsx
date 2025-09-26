@@ -1,4 +1,4 @@
-import { regular16 } from '../../utils/Style';
+import { normal, normal16, regular16, regular9 } from '../../utils/Style';
 import {
   View,
   Text,
@@ -158,7 +158,7 @@ const TrainerProfile = () => {
           <BigButton
             onPress={handleBookAppointment}
           >
-            <Text style={[regular16, { color: '#000', numberOfLines: 1 }]}>Book an Appointment</Text>
+            <Text style={[regular16, { color: '#000', textAlign: 'center' }]}>Book an Appointment</Text>
           </BigButton>
         </View>
       </ScrollView>

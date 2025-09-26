@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,17 +20,24 @@ import { useNavigation } from '@react-navigation/native';
 import { setIsPro, setIsSubscription } from '../../redux/Reducers/userReducer';
 import { store } from '../../redux/store';
 import AlertModal from '../Modals/AlertModal';
+import { AuthApi } from '../../Api/AuthApi';
 
 const SubscriptionPayment = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const isCard = useSelector(state => state.user.isCard);
   const cards = useSelector(state => state.user.cards || []);
+  const userId = useSelector(state => state.user.userId);
   const dispatch = useDispatch();
 
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Debug logs
+  console.log('SubscriptionPayment - Current userId:', userId);
+  console.log('SubscriptionPayment - Redux user state:', useSelector(state => state.user));
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,29 +95,61 @@ const SubscriptionPayment = () => {
 
       <View style={styles.buttonWrapper}>
         <BigButton
-          onPress={() => {
+          onPress={async () => {
             if (cards.length === 0) {
               setAlertTitle('Error');
               setAlertMessage('Please Add a Card');
               setAlertVisible(true);
               return;
             }
-            setAlertTitle('Success');
-            setAlertMessage('Payment Successful');
-            setAlertVisible(true);
-            // Set subscription status and pro status to true when payment is successful
-            dispatch(setIsSubscription(true));
-            dispatch(setIsPro(true));
-            navigation.navigate('BottomNavbar', {
-              screen: 'SubscriptionPayment',
-              params: {
-                plan: route.params.plan,
-              },
-            });
+
+            if (!userId) {
+              setAlertTitle('Error');
+              setAlertMessage('User not authenticated. Please login again.');
+              setAlertVisible(true);
+              return;
+            }
+
+            try {
+              setIsLoading(true);
+              
+              // Call API to update isPro status on the backend
+              await AuthApi.updateIsPro(userId, true);
+              
+              // Set subscription status and pro status to true when payment is successful
+              dispatch(setIsSubscription(true));
+              dispatch(setIsPro(true));
+              
+              setAlertTitle('Success');
+              setAlertMessage('Payment Successful! You are now a Pro member.');
+              setAlertVisible(true);
+              
+              // Navigate after a brief delay to show success message
+              setTimeout(() => {
+                navigation.navigate('BottomNavbar', {
+                  screen: 'SubscriptionPayment',
+                  params: {
+                    plan: route.params.plan,
+                  },
+                });
+              }, 1500);
+              
+            } catch (error) {
+              console.error('Payment processing error:', error);
+              setAlertTitle('Error');
+              setAlertMessage(error.message || 'Payment processing failed. Please try again.');
+              setAlertVisible(true);
+            } finally {
+              setIsLoading(false);
+            }
           }}
-          disabled={cards.length === 0}
+          disabled={cards.length === 0 || isLoading}
         >
-          <Text style={[regular16, { color: '#000' }]}>Confirm</Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="#000" />
+          ) : (
+            <Text style={[regular16, { color: '#000' }]}>Confirm</Text>
+          )}
         </BigButton>
       </View>
 

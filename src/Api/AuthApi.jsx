@@ -150,6 +150,25 @@ export const AuthApi = {
     }
   },
 
+  updateIsPro: async (userId, isPro) => {
+    try {
+      const response = await api.patch('/updateIsPro', {
+        userId,
+        isPro,
+      });
+      return response.data;
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error('Failed to update Pro status');
+    }
+  },
+
   SignUp: async userData => {
     try {
       console.log('=== AuthApi.googleSignUp STARTED ===');

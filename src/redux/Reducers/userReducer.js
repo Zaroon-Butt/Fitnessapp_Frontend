@@ -7,6 +7,7 @@ const initialState = {
   isCard: false,
   cards: [],
   isUsername: [],
+  userId: null,
   isPro: false,
   isSubscription: false,
   AppointmentNotification: false,
@@ -28,6 +29,10 @@ export const userReducer = createSlice({
 
     setIsUsername: (state, action) => {
       state.isUsername = action.payload;
+    },
+
+    setUserId: (state, action) => {
+      state.userId = action.payload;
     },
 
     setIsCard: (state, action) => {
@@ -74,6 +79,7 @@ export const userReducer = createSlice({
       state.isCard = [];
       state.cards = [];
       state.isUsername = [];
+      state.userId = null;
       state.isPro = false;
       state.isSubscription = false;
       state.AppointmentNotification = false;
@@ -90,6 +96,7 @@ export const {
   updateCard,
   deleteCard,
   setIsUsername,
+  setUserId,
   setIsPro,
   logout: logoutUser,
   setIsSubscription,
