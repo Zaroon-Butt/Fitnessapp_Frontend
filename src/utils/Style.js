@@ -1,4 +1,4 @@
-import { ExtraBold, Bold, Regular, Medium, Light } from './font';
+import { ExtraBold, Bold, Regular, Medium } from './font';
 import { RF } from './responsive';
 
 const heading = {
@@ -65,10 +65,5 @@ const regular9 = {
   color: '#FFFFFF',
 };
 
-const light = {
-  //300
-  fontFamily: Light,
-  color: '#FFFFFF',
-};
 
-export { heading, normal, regular, light, medium, regular9, normal16, medium24 , regular16 };
+export { heading, normal, regular, medium, regular9, normal16, medium24 , regular16 };

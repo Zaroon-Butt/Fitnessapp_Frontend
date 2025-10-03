@@ -35,6 +35,7 @@ const handleApiError = (error, operation) => {
 };
 
 export const exerciseApi = {
+
   // Get all exercises
   getAllExercises: async () => {
     try {
@@ -68,8 +69,8 @@ export const exerciseApi = {
     }
   },
 
-    // Get exercises by search query (e.g., type or keyword)
-    searchExercises: async searchQuery => {
+  // Get exercises by search query (e.g., type or keyword)
+  searchExercises: async searchQuery => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get(`/exercises/search`, {
@@ -79,7 +80,7 @@ export const exerciseApi = {
       } catch (error) {
         handleApiError(error, 'searchExercises');
       }
-    },
+   },
 
   // Get exercises by muscle group
   getExercisesByMuscle: async muscle => {
@@ -92,6 +93,7 @@ export const exerciseApi = {
     }
   },
 
+  // Get exercise details by ID
   getExerciseById: async id => {
     try {
       const axiosInstance = createAxiosInstance();

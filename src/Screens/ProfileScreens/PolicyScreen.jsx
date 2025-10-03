@@ -18,7 +18,7 @@ const Policy = () => {
       </View>
       <View style={styles.contentContainer}>
         <ScrollView>
-          <Text style={[regular, { textAlign: 'left' }]}>
+          <Text style={[regular, { textAlign: 'justify', lineHeight: 24 }]}>
             At FitnessApp, your privacy is very important to us. This Privacy
             Policy explains in detail how we collect, use, store, and share your
             personal information. By using FitnessApp, you agree to the
@@ -54,8 +54,7 @@ const Policy = () => {
             those services. Sharing is entirely optional and controlled by you.
             We may also disclose information if required by law, legal process,
             or governmental request. Your Rights You have full control over your
-            personal data. At any time, you can: Access and review the
-            information we hold about you. Correct or update inaccurate details.
+            personal data. At any time, you can: Access and review the information we hold about you. Correct or update inaccurate details.
             Request deletion of your account and associated data. If you
             exercise any of these rights, we will respond within a reasonable
             timeframe and in accordance with applicable data protection laws.

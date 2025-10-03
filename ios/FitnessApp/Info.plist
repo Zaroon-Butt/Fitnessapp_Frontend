@@ -50,17 +50,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fontspring-DEMO-integralcf-bold.otf</string>
-		<string>Fontspring-DEMO-integralcf-boldoblique.otf</string>
-		<string>Fontspring-DEMO-integralcf-demibold.otf</string>
-		<string>Fontspring-DEMO-integralcf-demiboldoblique.otf</string>
 		<string>Fontspring-DEMO-integralcf-extrabold.otf</string>
-		<string>Fontspring-DEMO-integralcf-extraboldoblique.otf</string>
-		<string>Fontspring-DEMO-integralcf-heavy.otf</string>
-		<string>Fontspring-DEMO-integralcf-heavyoblique.otf</string>
 		<string>Fontspring-DEMO-integralcf-medium.otf</string>
-		<string>Fontspring-DEMO-integralcf-mediumoblique.otf</string>
 		<string>Fontspring-DEMO-integralcf-regular.otf</string>
-		<string>Fontspring-DEMO-integralcf-regularoblique.otf</string>
 	</array>
 </dict>
 </plist>

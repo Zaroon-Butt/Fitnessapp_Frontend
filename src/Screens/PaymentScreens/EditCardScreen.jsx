@@ -8,10 +8,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { normal, regular16 } from '../../utils/Style';
+import { normal, regular16, regular9 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import BankCard from '../../Components/Cards/BankCard';
+import MonthYearPicker from '../../Components/Cards/MonthYearPicker';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -32,7 +33,7 @@ const EditCard = () => {
 
   const [cardHolderName, setCardHolderName] = useState(card ? card.name : '');
   const [cardNumber, setCardNumber] = useState(card ? card.number.replace(/\s/g, '') : '');
-  const [expiryDate, setExpiryDate] = useState(card ? card.expiry : '');
+  const [expiryDate, setExpiryDate] = useState(card && (card.expiryDate || card.expiry) ? { formatted: card.expiryDate || card.expiry } : null);
   const [cvc, setCvc] = useState(card ? card.cvc : '');
   const [formattedCardNumber, setFormattedCardNumber] = useState('');
 
@@ -66,6 +67,7 @@ const EditCard = () => {
             value={cardHolderName}
             onChangeText={setCardHolderName}
             maxLength={30}
+            required={true}
           />
           <TextInput
             style={styles.input}
@@ -75,16 +77,17 @@ const EditCard = () => {
             onChangeText={setCardNumber}
             keyboardType="numeric"
             maxLength={16}
+            required={true}
           />
           <View style={styles.row}>
-            <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="Expiry MM/YY"
-              placeholderTextColor="#888"
-              value={expiryDate}
-              onChangeText={setExpiryDate}
-              maxLength={5}
-            />
+            <View style={styles.halfInput}>
+              <MonthYearPicker
+                value={expiryDate}
+                onDateChange={setExpiryDate}
+                placeholder="Expiry MM/YY"
+                required={true}
+              />
+            </View>
             <TextInput
               style={[styles.input, styles.halfInput]}
               placeholder="CVC"
@@ -93,6 +96,7 @@ const EditCard = () => {
               onChangeText={setCvc}
               keyboardType="numeric"
               maxLength={3}
+              required={true}
             />
           </View>
 
@@ -103,7 +107,7 @@ const EditCard = () => {
               navigation.goBack();
             }}
           >
-            <Text style={styles.deleteButtonText}>Delete Card</Text>
+            <Text style={[regular9, { textAlign: 'left', color:"red" }]}>Delete Card</Text>
           </TouchableOpacity>
         </View>
 
@@ -112,7 +116,7 @@ const EditCard = () => {
             const updatedCardObj = {
               name: cardHolderName,
               number: formattedCardNumber,
-              expiry: expiryDate,
+              expiryDate: expiryDate?.formatted || '',
               cvc: cvc,
             };
             dispatch(updateCard({ index: cardIndex, card: updatedCardObj }));
@@ -168,40 +172,12 @@ const styles = StyleSheet.create({
   halfInput: {
     width: '48%',
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderWidth: 2,
-    borderColor: '#666',
-    borderRadius: 4,
-    marginRight: 10,
-    marginLeft: 8,
-    marginTop: 5,
-  },
-  checkboxChecked: {
-    backgroundColor: '#D0FD3E',
-    borderColor: '#D0FD3E',
-  },
-  checkboxLabel: {
-    color: '#fff',
-    marginTop: 8,
-    fontSize: 10,
-    flex: 1,
-  },
+ 
   deleteButton: {
     marginLeft: 10,
     marginTop: 5,
   },
-  deleteButtonText: {
-    color: 'red',
-    fontSize: 16,
-    fontWeight: '500',
-  },
+ 
   buttonWrapper: {
     paddingHorizontal: 20,
     paddingBottom: 20,

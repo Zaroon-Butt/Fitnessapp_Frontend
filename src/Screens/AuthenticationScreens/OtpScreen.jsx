@@ -200,7 +200,7 @@ const OtpScreen = () => {
           style={styles.tryAnotherWayButton}
           onPress={handleResendOTP}
         >
-          <Text style={regular}>Did You Receive Any Code? Resend OTP</Text>
+          <Text style={regular}>Did You Receive Any Code? <Text style={{color: '#d0fd3e'}}>Resend OTP</Text></Text>
         </TouchableOpacity>
 
         <TouchableOpacity

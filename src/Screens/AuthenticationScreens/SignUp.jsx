@@ -20,6 +20,7 @@ import { ProvideContext } from '../../context/ProvideContext';
 import { setIsUsername } from '../../redux/Reducers/userReducer';
 import AlertModal from '../Modals/AlertModal';
 import { GoogleLogin } from '../../utils/GoogleAuth';
+import { AuthApi } from '../../Api/AuthApi';
 
 const { width, height } = Dimensions.get('window');
 
@@ -143,17 +144,35 @@ export default function SignUp() {
         return; // Stop here if email exists
       }
 
-      updateOnboarding({
-        email: values.email,
-        password: values.password,
-      });
+      // Call the EmailOtp API to send verification email
+      // try {
+      //   const otpResponse = await AuthApi.EmailOtp(values.email);
+      //   console.log('OTP sent successfully:', otpResponse);
+        
+        // // If OTP sent successfully, update onboarding data
+        updateOnboarding({
+          email: values.email,
+          password: values.password,
+        });
 
-      // Set username in Redux to the part before '@'
-      const username = values.email.split('@')[0].replace(/[0-9]/g, '');
-      dispatch(setIsUsername(username));
+        // Set username in Redux to the part before '@'
+        const username = values.email.split('@')[0].replace(/[0-9]/g, '');
+        dispatch(setIsUsername(username));
 
-      setIsLoading(false);
-      navigation.navigate('GenderScreen'); // Only navigates if email does not exist
+        // Show success message
+        // setAlertTitle('Verification Email Sent');
+        // setAlertMessage('Please check your email for a verification code');
+        // setAlertVisible(true);
+        
+        setIsLoading(false);
+        navigation.navigate('GenderScreen'); // Only navigates if email does not exist
+      // } catch (otpError) {
+      //   setIsLoading(false);
+      //   setAlertTitle('Verification Failed');
+      //   setAlertMessage(otpError.message || 'Failed to send verification email');
+      //   setAlertVisible(true);
+      //   return;
+      // }
     } catch (error) {
       setIsLoading(false);
       setAlertTitle('Error');
@@ -162,15 +181,15 @@ export default function SignUp() {
     }
   };
 
-  const handleAppleSignIn = async () => {
-    try {
-      // Add Apple sign-in logic here
-      console.log('Apple sign in pressed');
-      // navigation.navigate('GenderScreen');
-    } catch (error) {
-      console.log('Apple sign in error:', error);
-    }
-  };
+  // const handleAppleSignIn = async () => {
+  //   try {
+  //     // Add Apple sign-in logic here
+  //     console.log('Apple sign in pressed');
+  //     // navigation.navigate('GenderScreen');
+  //   } catch (error) {
+  //     console.log('Apple sign in error:', error);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -318,13 +337,13 @@ export default function SignUp() {
 
           {!isLoading && (
             <>
-              <TouchableOpacity style={styles.icon} onPress={handleAppleSignIn}>
+              {/* <TouchableOpacity style={styles.icon} onPress={handleAppleSignIn}>
                 <View>
                   <Image source={Apple} style={{ width: 50, height: 50 }} />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity 
-                style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}
+                style={[styles.icon, { backgroundColor: '#FFFFFF' }]}
                 onPress={handleGoogleSignUp}
               > 
                <View>

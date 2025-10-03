@@ -13,14 +13,16 @@ import { normal, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';
 import BankCard from '../../Components/Cards/BankCard';
+import MonthYearPicker from '../../Components/Cards/MonthYearPicker';
 import { store } from '../../redux/store';
 import { addCard } from '../../redux/Reducers/userReducer';
+
 
 const AddCard = () => {
   const navigation = useNavigation();
   const [cardHolderName, setCardHolderName] = useState('');
   const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
+  const [expiryDate, setExpiryDate] = useState(null);
   const [cvc, setCvc] = useState('');
   const [saveCard, setSaveCard] = useState(false);
   const [formattedCardNumber, setFormattedCardNumber] = useState('');
@@ -65,15 +67,13 @@ const AddCard = () => {
             maxLength={16}
           />
           <View style={styles.row}>
-            <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="Expiry MM/YY"
-              placeholderTextColor="#888"
-              value={expiryDate}
-              onChangeText={text => setExpiryDate(text.replace(/[^0-9]/g, ''))}
-              keyboardType="numeric"
-              maxLength={4}
-            />
+            <View style={styles.halfInput}>
+              <MonthYearPicker
+                value={expiryDate}
+                onDateChange={setExpiryDate}
+                placeholder="Expiry MM/YY"
+              />
+            </View>
             <TextInput
               style={[styles.input, styles.halfInput]}
               placeholder="CVC"
@@ -100,11 +100,11 @@ const AddCard = () => {
         <View style={styles.buttonWrapper}>
           <BigButton
             onPress={() => {
-              if (cardHolderName && cardNumber) {
+              if (cardHolderName && cardNumber && expiryDate) {
                 const cardData = {
                   name: cardHolderName,
                   number: formattedCardNumber,
-                  expiryDate: expiryDate,
+                  expiryDate: expiryDate.formatted,
                   cvc: cvc,
                   isDefault: saveCard,
                 };

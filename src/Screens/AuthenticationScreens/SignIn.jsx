@@ -179,8 +179,6 @@ export default function SignIn() {
     }
   };
 
- 
-
   return (
     <View style={styles.container}>
       {/* Background Image */}
@@ -320,16 +318,16 @@ export default function SignIn() {
 
           {!isLoading && (
             <>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.icon}
                 onPress={() => console.log('Apple sign in pressed')}
               >
                 <View>
                   <Image source={Apple} style={{ width: 50, height: 50 }} />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity 
-                style={[styles.icon, { left: 80, backgroundColor: '#FFFFFF' }]}
+                style={[styles.icon, { backgroundColor: '#FFFFFF' }]}
                 onPress={handleGoogleSignIn}
               > 
                 <View>

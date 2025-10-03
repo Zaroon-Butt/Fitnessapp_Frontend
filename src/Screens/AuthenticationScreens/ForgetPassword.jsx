@@ -11,7 +11,7 @@ import {
   StatusBar,
   ActivityIndicator,
 } from 'react-native';
-import { heading, light, medium, normal, regular } from '../../utils/Style';
+import { heading, medium, normal, regular } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';
 import { AuthApi } from '../../Api/AuthApi';

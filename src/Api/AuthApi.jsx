@@ -2,7 +2,10 @@ import axios from 'axios';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 // const BASE_URL = 'http://10.0.2.2:3000/api/auth';
-const BASE_URL = 'http://localhost:3000/api/auth';
+// const BASE_URL = 'http://localhost:3000/api/auth';
+const BASE_URL = 'https://fitness.webevis.com/api/auth';
+
+
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -168,7 +171,7 @@ export const AuthApi = {
       throw new Error('Failed to update Pro status');
     }
   },
-
+// SignUp for Google (Password is token from Google)
   SignUp: async userData => {
     try {
       console.log('=== AuthApi.googleSignUp STARTED ===');
@@ -234,7 +237,6 @@ export const AuthApi = {
       );
 
       // Send to backend
-      console.log('AuthApi: Making POST request to /google-signup...');
       const response = await api.post('/google-signup', signUpData);
 
       return response.data;
@@ -265,4 +267,21 @@ export const AuthApi = {
       );
     }
   },
+
+
+  // EmailOtp: async (email) => {
+  //   try {
+  //     const response = await api.post('/Verify-Email', { email });
+  //     return response.data;
+  //   } catch (error) {
+  //     if (
+  //       error.response &&
+  //       error.response.data &&
+  //       error.response.data.message
+  //     ) {
+  //       throw new Error(error.response.data.message);
+  //     }
+  //     throw new Error('Email OTP verification failed');
+  //   }
+  // },
 };
