@@ -7,10 +7,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { heading, medium, normal, regular } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
 import BackButton from '../../Components/Buttons/BackButton';

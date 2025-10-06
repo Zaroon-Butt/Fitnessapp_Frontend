@@ -3,10 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProfilePicture } from '../../utils';
 import BackButton from '../../Components/Buttons/BackButton';
 import { medium, regular, regular16 } from '../../utils/Style';

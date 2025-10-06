@@ -3,11 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { normal, regular16, regular9 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';
 import BackButton from '../../Components/Buttons/BackButton';

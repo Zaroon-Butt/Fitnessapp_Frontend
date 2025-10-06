@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute } from '@react-navigation/native';
 import { WorkoutDetailImage } from '../../utils';
 import BigButton from '../../Components/Buttons/BigButton';
@@ -29,7 +30,7 @@ const PaymentCompleteScreen = () => {
   const appointmentTime = appointmentDetails?.appointmentTime || '09:30 AM';
 
   return (
-    <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
       <Text style={styles.title}>✅ Payment Completed!</Text>
       <Text style={styles.subtitle}>
         You’ve book a new appointment {'\n'}with your trainer.
@@ -61,16 +62,21 @@ const PaymentCompleteScreen = () => {
         </View>
       </View>
 
-  <BigButton onPress={() => navigation.navigate('BottomNavbar')}>
-  <Text style={[regular16, { color: '#000' }]}>Done</Text>
-  </BigButton>
-    </View>
+      <BigButton onPress={() => navigation.navigate('BottomNavbar')}>
+        <Text style={[regular16, { color: '#000' }]}>Done</Text>
+      </BigButton>
+    
+    </SafeAreaView>
   );
 };
 
 export default PaymentCompleteScreen;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1C1C1E',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1C1C1E',

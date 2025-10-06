@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import {
   normal,
@@ -11,7 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const Policy = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[normal, { marginLeft: 40 }]}>Privacy Policy</Text>
@@ -71,7 +72,7 @@ const Policy = () => {
           </Text>
         </ScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

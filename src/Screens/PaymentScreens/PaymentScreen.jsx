@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View,  Text,StyleSheet,  SafeAreaView,TouchableOpacity,ScrollView} from 'react-native';
+import { View,  Text,StyleSheet, TouchableOpacity,ScrollView} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { normal, regular16 } from '../../utils/Style';

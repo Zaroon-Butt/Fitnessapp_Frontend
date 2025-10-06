@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { heading, normal } from '../../utils/Style';
 import { RF } from '../../utils/responsive';
 import { onboard2 } from '../../utils';
@@ -8,7 +9,8 @@ const { width, height } = Dimensions.get('window');
 
 export default function Screen2() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
       <View style={styles.backgroundImage}>
         <Image
           source={onboard2}
@@ -22,10 +24,15 @@ export default function Screen2() {
         <Text style={[normal,{fontSize: RF(18)}]}>TO STAY FIT</Text>
       </View>
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1C1C1E',
+  },
   container: {
     flex: 1,
     alignItems: 'center',

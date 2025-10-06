@@ -3,12 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   Image,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import CalendarPicker from 'react-native-calendar-picker';
 import { normal, regular16 } from '../../utils/Style';
 import BigButton from '../../Components/Buttons/BigButton';

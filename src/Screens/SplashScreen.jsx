@@ -4,6 +4,7 @@ import { heading } from '../utils/Style';
 import { SplashScreenLogo } from '../utils';
 import { useDispatch } from 'react-redux';
 import { setIsLogin } from '../redux/Reducers/userReducer';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DumbbellIcon = ({ style }) => {
   return (
@@ -18,17 +19,17 @@ const DumbbellIcon = ({ style }) => {
 const SplashScreen = () => {
   const dispatch = useDispatch();
 
-  // dispatch(setIsLogin(false));
+  dispatch(setIsLogin(false));
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.logoCircle}>
         <DumbbellIcon />
       </View>
 
       <Text style={heading}>Fitness</Text>
       <Text style={heading}>Freak</Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

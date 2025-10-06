@@ -8,6 +8,7 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import { RF } from '../../utils/responsive'; // use RF(val) or replace with val directly
@@ -23,7 +24,8 @@ export default function SubscriptionScreen() {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
       {/* Background image with dark gradient overlay */}
       <ImageBackground source={Subscription} style={styles.backgroundImage}>
         <View style={styles.backButtonContainer}>
@@ -55,15 +57,15 @@ export default function SubscriptionScreen() {
         <TouchableOpacity
           style={[
             styles.planCard,
-            selectedPlan === 'monthly' && styles.activePlanCard,
+            selectedPlan === 'Monthly' && styles.activePlanCard,
           ]}
-          onPress={() => setSelectedPlan('monthly')}
+          onPress={() => setSelectedPlan('Monthly')}
         >
           <View style={styles.planLeft}>
             <View
               style={[
                 styles.radioButton,
-                selectedPlan === 'monthly' && styles.radioSelected,
+                selectedPlan === 'Monthly' && styles.radioSelected,
               ]}
             />
             <View>
@@ -112,10 +114,15 @@ export default function SubscriptionScreen() {
         </BigButton>
       </View>
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1C1C1E',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1C1C1E',

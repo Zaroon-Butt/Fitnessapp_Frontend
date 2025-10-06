@@ -2,10 +2,10 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import BackButton from '../../Components/Buttons/BackButton';
 import { normal16 } from '../../utils/Style';
@@ -14,7 +14,7 @@ import { OffRadioButton, OnRadioButton } from '../../utils';
 const SettingScreen = () => {
   const [selectedUnit, setSelectedUnit] = useState('metric'); // 'metric' or 'imperial'
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[normal16, { marginLeft: 70 }]}>Settings</Text>
@@ -37,7 +37,7 @@ const SettingScreen = () => {
           <Image style={styles.radioButton} source={selectedUnit === 'imperial' ? OnRadioButton : OffRadioButton}></Image>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

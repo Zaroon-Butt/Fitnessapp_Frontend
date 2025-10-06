@@ -5,10 +5,10 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
   Linking
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import BigButton from '../../Components/Buttons/BigButton';
 import { TrainerDetailImage } from '../../utils';

@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { exerciseApi } from '../../Api/ExerciseApi';
@@ -56,7 +57,8 @@ const ExerciseDetailScreen = () => {
   }, [exerciseId]);
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
       <View>
         <View style={styles.headerContainer}>
           <BackButton />
@@ -125,12 +127,17 @@ const ExerciseDetailScreen = () => {
         )}
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default ExerciseDetailScreen;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1c1c1e',

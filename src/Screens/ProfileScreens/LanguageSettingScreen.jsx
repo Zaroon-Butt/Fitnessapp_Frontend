@@ -2,12 +2,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Image,
   TextInput,
   FlatList,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import BackButton from '../../Components/Buttons/BackButton';
 import { normal16 } from '../../utils/Style';
@@ -36,7 +36,7 @@ const LanguageSettingScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[normal16, { marginLeft: 70 }]}>Language</Text>
@@ -59,7 +59,7 @@ const LanguageSettingScreen = () => {
         style={styles.languageList}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

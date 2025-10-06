@@ -4,8 +4,8 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { normal } from '../../utils/Style';
 import { onboard1 , onboard01 } from '../../utils';
 

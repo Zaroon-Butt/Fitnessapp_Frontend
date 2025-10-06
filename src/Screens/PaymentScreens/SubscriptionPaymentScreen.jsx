@@ -3,11 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { normal, regular, regular16 } from '../../utils/Style';
@@ -88,8 +88,7 @@ const SubscriptionPayment = () => {
           Plan: {route.params.plan} Selected
         </Text>
         <Text  style={styles.orderDetailSubtitle}>
-          {' '}
-          Price: {route.params.plan === 'monthly' ? '$19.99' : '$129.99'}
+          Price: {route.params.plan === 'Monthly' ? '$19.99' : '$129.99'}
         </Text>
       </View>
 

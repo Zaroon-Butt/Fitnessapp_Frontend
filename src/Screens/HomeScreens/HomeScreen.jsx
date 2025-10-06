@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { WorkoutCard } from '../../Components/Cards/WorkoutCard';
 import { normal, regular9 } from '../../utils/Style';
 import { useSubscriptionStatus } from '../../utils';
@@ -95,7 +96,7 @@ const HomeScreen = () => {
     day: 'numeric',
   });
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -201,7 +202,7 @@ const HomeScreen = () => {
         onConfirm={handleNormalModalConfirm}
         workout={selectedWorkout}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

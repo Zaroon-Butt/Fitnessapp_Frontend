@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import BackButton from '../../Components/Buttons/BackButton';
 import { normal, normal16 } from '../../utils/Style';
@@ -8,7 +9,7 @@ const WebviewScreen = ({ route, navigation }) => {
   const { url, title } = route.params;
 
   return (
-    <View style={{ flex: 1  }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1c1c1e' }}>
       <View style={styles.header}>
         <View style={styles.backButtonContainer}>
           <BackButton onPress={() => navigation.goBack()} />
@@ -18,7 +19,7 @@ const WebviewScreen = ({ route, navigation }) => {
       <View style={styles.container}>
         <WebView source={{ uri: url }} style={styles.webview} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

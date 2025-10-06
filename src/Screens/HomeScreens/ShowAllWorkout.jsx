@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import WorkoutCategoriesBar from '../../Components/Navbar/WorkoutCategoryBar';
 import BackButton from '../../Components/Buttons/BackButton';
@@ -63,7 +64,8 @@ const ShowAllWorkout = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[normal16, { flex: 1, textAlign: 'center' }]}>Workout Categories</Text>
@@ -95,12 +97,17 @@ const ShowAllWorkout = () => {
         workout={selectedWorkout}
       />
     </View>
+    </SafeAreaView>
   );
 };
 
 export default ShowAllWorkout;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1c1c1e',

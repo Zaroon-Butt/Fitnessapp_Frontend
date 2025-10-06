@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { normal } from '../../utils/Style';
 import { RF } from '../../utils/responsive';
@@ -23,7 +24,8 @@ export default function Screen3() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
       <View style={styles.backgroundImage}>
         <Image
           source={require('../../images/onBoarding3.png')}
@@ -43,10 +45,15 @@ export default function Screen3() {
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1C1C1E',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -103,11 +110,5 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     fontSize: 16,
-  },
-  text: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-    textAlign: 'center',
   },
 });

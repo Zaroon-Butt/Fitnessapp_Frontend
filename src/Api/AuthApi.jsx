@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-// const BASE_URL = 'http://10.0.2.2:3000/api/auth';
-// const BASE_URL = 'http://localhost:3000/api/auth';
-const BASE_URL = 'https://fitness.webevis.com/api/auth';
+// const BASE_URL = 'http://10.0.2.2:3000/api/auth';  // Emulator loopback
+// const BASE_URL = 'http://localhost:3000/api/auth';  // Localhost for PC
+const BASE_URL = 'https://fitness.webevis.com/api/auth'; // Production server
 
 
 

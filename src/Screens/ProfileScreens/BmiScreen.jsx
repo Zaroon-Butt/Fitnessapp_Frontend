@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {View,Text,TouchableOpacity, StyleSheet,ScrollView,FlatList, Dimensions} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import BigButton from '../../Components/Buttons/BigButton';
 import { useNavigation } from '@react-navigation/native';
@@ -83,7 +84,7 @@ const BMICalculator = () => {
   };
 
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <BackButton onPress={() => navigation.goBack()} />
@@ -126,11 +127,15 @@ const BMICalculator = () => {
         bmi={bmi}
         bmiCategory={bmi ? getBMICategory(bmi) : null}
       />
-    </>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: { flexGrow: 1, padding: 20, backgroundColor: '#1c1c1e' },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
 

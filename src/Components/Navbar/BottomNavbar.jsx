@@ -10,7 +10,9 @@ import {
   HomeLogo,
   NetworkBars,
   Notification,
-  ProfilePicture
+  ProfilePicture,
+  bell,
+  shoes,
 } from '../../utils/index';
 
 const Tab = createBottomTabNavigator();
@@ -18,7 +20,7 @@ const Tab = createBottomTabNavigator();
 const CustomTabIcon = ({ icon, focused }) => (
   <Image
     source={icon}
-    style={[styles.icon, { tintColor: focused ? '#ffffff' : '#c4c4c4' }]}
+    style={[styles.icon, { tintColor: focused ? '#ffffff' : '#b1b0b0ff' }]}
   />
 );
 
@@ -55,7 +57,7 @@ const BottomNavbar = () => {
         component={NetworkScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <CustomTabIcon icon={NetworkBars} focused={focused} />
+            <CustomTabIcon icon={shoes} focused={focused} />
           ),
         }}
       />
@@ -64,7 +66,7 @@ const BottomNavbar = () => {
         component={NotificationScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <CustomTabIcon icon={Notification} focused={focused} />
+            <CustomTabIcon icon={bell} focused={focused} />
           ),
         }}
       />

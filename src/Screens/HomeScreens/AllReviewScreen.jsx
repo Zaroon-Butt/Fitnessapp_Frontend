@@ -4,6 +4,7 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { medium ,regular16} from '../../utils/Style';
 import ReviewNavbar from '../../Components/Navbar/ReviewNavbar';
 import BackButton from '../../Components/Buttons/BackButton';
@@ -24,7 +25,8 @@ const AllReviewScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[medium, styles.titleText]}>Reviews</Text>
@@ -51,10 +53,15 @@ const AllReviewScreen = () => {
         </BigButton>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1c1c1e',

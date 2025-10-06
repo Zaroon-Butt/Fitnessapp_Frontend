@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import BigButton from '../../Components/Buttons/BigButton';
 import ExerciseDetailCard from '../../Components/Cards/ExerciseDetailCard';
@@ -121,7 +122,8 @@ const WorkoutTypesDetail = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
       <View>
         <View style={styles.headerContainer}>
           <BackButton />
@@ -140,12 +142,17 @@ const WorkoutTypesDetail = () => {
         )}
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default WorkoutTypesDetail;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1c1c1e',

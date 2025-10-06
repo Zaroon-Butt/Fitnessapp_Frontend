@@ -6,6 +6,7 @@ import { RF } from '../../utils/responsive';
 import { setAppointmentNotification, setWorkoutReminder } from '../../redux/Reducers/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeWorkoutReminders, sendTestNotification } from '../../utils/NotificationService';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const NotificationSettingScreen = () => {
   const WorkoutReminder = useSelector(state => state.user.WorkoutReminder);
@@ -54,7 +55,7 @@ const NotificationSettingScreen = () => {
   // };
 
   return (
-    <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[normal16, { flex: 1, marginRight: RF(10) }]}>
@@ -94,7 +95,7 @@ const NotificationSettingScreen = () => {
           </Text>
         </TouchableOpacity> */}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

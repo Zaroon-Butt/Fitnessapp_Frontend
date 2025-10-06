@@ -13,6 +13,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { SignInImage, Apple, Google } from '../../utils';
 import { medium24, regular } from '../../utils/Style';
@@ -21,14 +22,15 @@ import { SignInSchema } from '../../utils/Validation';
 import { AuthApi } from '../../Api/AuthApi';
 import AlertModal from '../Modals/AlertModal';
 import { GoogleLogin } from '../../utils/GoogleAuth';
-
 const { width, height } = Dimensions.get('window');
+
 
 export default function SignIn() {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isLogin } = useSelector(state => state.user);
+  const isUsername = useSelector(state => state.user.isUsername);
   const [isLoading, setIsLoading] = useState(false);
 
   const [alertVisible, setAlertVisible] = useState(false);
@@ -180,7 +182,7 @@ export default function SignIn() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Background Image */}
       <View style={styles.backgroundImage}>
         <Image source={SignInImage} style={styles.image} />
@@ -226,7 +228,7 @@ export default function SignIn() {
         <View style={styles.textContainer}>
           <Text style={[medium24, { color: '#FFFFFF' }]}>WELCOME BACK</Text>
           <Text style={[medium24, { color: '#FFFFFF' }]}>
-            {store.getState().user.isUsername}
+            {isUsername}
           </Text>
         </View>
       )}
@@ -345,7 +347,7 @@ export default function SignIn() {
         alertTitle={alertTitle}
         alertMessage={alertMessage}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

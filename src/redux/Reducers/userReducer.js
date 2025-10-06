@@ -12,6 +12,9 @@ const initialState = {
   AppointmentNotification: false,
   WorkoutReminder: false,
   joinedDate: null,
+  stepGoal: null, // null means not set yet
+  isStepGoalSet: false,
+  
 };
 
 export const userReducer = createSlice({
@@ -73,11 +76,16 @@ export const userReducer = createSlice({
       state.WorkoutReminder = action.payload;
     },
 
+    setStepGoal: (state, action) => {
+      state.stepGoal = action.payload;
+      state.isStepGoalSet = true;
+    },
+
     logout: (state ,action) => {
       state.isLogin = false;
       state.isCard = [];
       state.cards = [];
-      state.isUsername = [];
+      // state.isUsername = [];
       state.userId = null;
       state.isPro = false;
       state.isSubscription = false;

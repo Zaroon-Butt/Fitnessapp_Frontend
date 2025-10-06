@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import ExerciseDetailCard from '../../Components/Cards/ExerciseDetailCard';
 import { useNavigation } from '@react-navigation/native';
@@ -27,7 +28,8 @@ const WorkoutTypes = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
       <View>
         <View style={styles.headerContainer}>
           <BackButton />
@@ -73,12 +75,17 @@ const WorkoutTypes = () => {
         )}
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default WorkoutTypes;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1c1c1e',

@@ -1,14 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import NotificationBar from '../../Components/Navbar/NotificationBar';
 import { regular, regular16, regular9 } from '../../utils/Style';
 
 const NotificationScreen = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <NotificationBar />
       <Text style={[regular16, { textAlign: 'center' }]}>Notifications</Text>
       <Text style={[styles.subtitle, regular9]}>No new notifications</Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

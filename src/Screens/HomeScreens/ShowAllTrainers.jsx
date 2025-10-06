@@ -6,6 +6,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import TrainerDetailCard from '../../Components/Cards/TrainerDetailCard';
 import { medium } from '../../utils/Style';
@@ -15,7 +16,8 @@ import { useNavigation } from '@react-navigation/native';
 const ShowAllTrainers = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[medium, { flex: 1, textAlign: 'center' }]}>Fitness Trainers</Text>
@@ -44,12 +46,17 @@ const ShowAllTrainers = () => {
         showsVerticalScrollIndicator={false}
       />
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default ShowAllTrainers;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1c1c1e',

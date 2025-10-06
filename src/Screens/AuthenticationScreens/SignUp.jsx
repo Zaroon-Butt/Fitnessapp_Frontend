@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { SignUpImage, Apple, Google } from '../../utils';
@@ -192,7 +193,7 @@ export default function SignUp() {
   // };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Background Image */}
       <View style={styles.backgroundImage}>
         <Image source={SignUpImage} style={styles.image} />
@@ -361,7 +362,7 @@ export default function SignUp() {
         alertTitle={alertTitle}
         alertMessage={alertMessage}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

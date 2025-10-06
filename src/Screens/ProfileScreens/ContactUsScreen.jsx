@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Image,
 } from 'react-native';
@@ -10,10 +9,12 @@ import { RF } from '../../utils/responsive';
 import { useState } from 'react';
 import BackButton from '../../Components/Buttons/BackButton';
 import { normal16 } from '../../utils/Style';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
 
 const ContactUsScreen = () => {
   return (
-    <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
   <Text style={[normal16, { marginLeft: 70 }]}>Contact Us</Text>
@@ -27,7 +28,7 @@ const ContactUsScreen = () => {
         <Text style={styles.infoText}>Email</Text>
         <Text style={styles.infoText}>Webevis@gmail.com</Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -2,16 +2,17 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../Components/Buttons/BackButton';
 import NextArrowButton from '../../Components/Buttons/NextArrowButton';
 import { normal16, regular } from '../../utils/Style';
 
 const SettingScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton />
         <Text style={[normal16, { marginLeft: 80 }]}>Settings</Text>
@@ -65,10 +66,15 @@ const SettingScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+  },
   container: {
     flex: 1,
     padding: 10,
