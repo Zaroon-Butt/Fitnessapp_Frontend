@@ -131,9 +131,11 @@ const Payment = () => {
             }
             navigation.navigate('PaymentCompleteScreen', {
               appointmentDetails: {
-                trainer: trainerData,
-                date: appointmentDate,
-                time: appointmentTime,
+                trainerName: trainerData.name,
+                trainerRating: trainerData.rating,
+                trainerSpecialty: trainerData.specialty,
+                appointmentDate: appointmentDate,
+                appointmentTime: appointmentTime,
               },
             });
           }}

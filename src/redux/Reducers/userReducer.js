@@ -14,7 +14,7 @@ const initialState = {
   joinedDate: null,
   stepGoal: null, // null means not set yet
   isStepGoalSet: false,
-  
+  notifications: [], // Array to store appointment notifications
 };
 
 export const userReducer = createSlice({
@@ -80,6 +80,36 @@ export const userReducer = createSlice({
       state.stepGoal = action.payload;
       state.isStepGoalSet = true;
     },
+    
+    addNotification: (state, action) => {
+      // Initialize notifications array if it doesn't exist
+      if (!state.notifications) {
+        state.notifications = [];
+      }
+      
+      // Check for duplicates before adding
+      const isDuplicate = state.notifications.some(
+        notification => 
+          notification.appointmentDate === action.payload.appointmentDate && 
+          notification.appointmentTime === action.payload.appointmentTime
+      );
+      
+      if (!isDuplicate) {
+        state.notifications.unshift(action.payload); // Add to the beginning of the array
+      }
+    },
+    
+    removeNotification: (state, action) => {
+      if (state.notifications) {
+        state.notifications = state.notifications.filter((_, index) => index !== action.payload);
+      } else {
+        state.notifications = [];
+      }
+    },
+    
+    clearNotifications: (state) => {
+      state.notifications = [];
+    },
 
     logout: (state ,action) => {
       state.isLogin = false;
@@ -91,6 +121,7 @@ export const userReducer = createSlice({
       state.isSubscription = false;
       state.AppointmentNotification = false;
       state.WorkoutReminder = false;
+      state.notifications = []; // Clear notifications on logout
     }
   },
 });
@@ -109,7 +140,10 @@ export const {
   setIsSubscription,
   setAppointmentNotification,
   setWorkoutReminder,
-
+  addNotification,
+  removeNotification,
+  clearNotifications,
+  setStepGoal
 } = userReducer.actions;
 
 export default userReducer.reducer;

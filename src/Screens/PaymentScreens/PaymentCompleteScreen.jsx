@@ -13,21 +13,47 @@ import { useRoute } from '@react-navigation/native';
 import { WorkoutDetailImage } from '../../utils';
 import BigButton from '../../Components/Buttons/BigButton';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../redux/Reducers/userReducer';
 
 const { width } = Dimensions.get('window');
 
 const PaymentCompleteScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const route = useRoute();
   const { appointmentDetails } = route.params || {};
 
-  const trainerName = appointmentDetails?.trainerName || 'Emily Kevin';
-  const trainerRating = appointmentDetails?.trainerRating || 4.9;
-  const trainerSpecialty =
-    appointmentDetails?.trainerSpecialty || 'High Intensity Training';
-  const appointmentDate =
-    appointmentDetails?.appointmentDate || '20 October 2021 - Wednesday';
-  const appointmentTime = appointmentDetails?.appointmentTime || '09:30 AM';
+  const trainerName = appointmentDetails?.trainerName;
+  const trainerRating = appointmentDetails?.trainerRating;
+  const trainerSpecialty = appointmentDetails?.trainerSpecialty;
+  const appointmentDate = appointmentDetails?.appointmentDate;
+  const appointmentTime = appointmentDetails?.appointmentTime;
+
+
+
+
+  const handleDonePress = () => {
+    // Create a complete appointment object to pass to the notification screen
+    const appointmentData = {
+      trainerName,
+      trainerRating,
+      trainerSpecialty,
+      appointmentDate,
+      appointmentTime,
+      trainerImage: WorkoutDetailImage
+    };
+    
+    console.log("Adding appointment to Redux store:", appointmentData);
+    
+    // Add appointment to Redux store
+    dispatch(addNotification(appointmentData));
+    
+    // Navigate to bottom navbar
+    navigation.navigate('BottomNavbar', {
+      screen: 'Notifications'
+    });
+  }
 
   return (
       <SafeAreaView style={styles.container}>
@@ -62,7 +88,7 @@ const PaymentCompleteScreen = () => {
         </View>
       </View>
 
-      <BigButton onPress={() => navigation.navigate('BottomNavbar')}>
+      <BigButton onPress={handleDonePress}>
         <Text style={[regular16, { color: '#000' }]}>Done</Text>
       </BigButton>
     

@@ -15,7 +15,7 @@ export const sampleWorkouts = [
   {
     id: '1',
     title: 'Evening Cardio',
-    subtitle: '45 min',
+    // subtitle: '45 min',
     category: 'cardio',
     difficulty: 'medium',
     calories: 350,
@@ -26,7 +26,7 @@ export const sampleWorkouts = [
   {
     id: '2',
     title: 'HIIT Training',
-    subtitle: '25 min',
+    // subtitle: '25 min',
     category: 'hiit',
     difficulty: 'hard',
     calories: 280,
@@ -37,7 +37,7 @@ export const sampleWorkouts = [
   {
     id: '3',
     title: 'Strength Training',
-    subtitle: '60 min',
+    // subtitle: '60 min',
     category: 'strength',
     difficulty: 'medium',
     calories: 420,
@@ -48,7 +48,7 @@ export const sampleWorkouts = [
   {
     id: '4',
     title: 'Pilates',
-    subtitle: '35 min',
+    // subtitle: '35 min',
     category: 'flexibility',
     difficulty: 'easy',
     calories: 200,
@@ -59,7 +59,7 @@ export const sampleWorkouts = [
   {
     id: '5',
     title: 'Morning Run',
-    subtitle: '40 min',
+    // subtitle: '40 min',
     category: 'cardio',
     difficulty: 'medium',
     calories: 380,
@@ -70,7 +70,7 @@ export const sampleWorkouts = [
   {
     id: '6',
     title: 'Core Blast',
-    subtitle: '20 min',
+    // subtitle: '20 min',
     category: 'strength',
     difficulty: 'hard',
     calories: 150,
@@ -81,7 +81,7 @@ export const sampleWorkouts = [
   {
     id: '7',
     title: 'Yoga Flow',
-    subtitle: '50 min',
+    // subtitle: '50 min',
     category: 'flexibility',
     difficulty: 'easy',
     calories: 180,
@@ -92,7 +92,7 @@ export const sampleWorkouts = [
   {
     id: '8',
     title: 'CrossFit WOD',
-    subtitle: '45 min',
+    // subtitle: '45 min',
     category: 'hiit',
     difficulty: 'hard',
     calories: 450,
@@ -105,7 +105,7 @@ export const sampleWorkouts = [
 export const todayWorkout = {
   id: 'today-1',
   title: 'Morning Yoga',
-  subtitle: '30 min',
+  subtitle: '10 min',
   category: 'flexibility',
   difficulty: 'easy',
   calories: 120,
@@ -118,7 +118,7 @@ export const newWorkout = [
   {
     id: 'new-1',
     title: 'Evening Stretch',
-    subtitle: '15 min',
+    subtitle: '24 min',
     category: 'flexibility',
     difficulty: 'easy',
     calories: 80,
@@ -140,7 +140,7 @@ export const newWorkout = [
   {
     id: 'new-3',
     title: 'Full Body HIIT Blast',
-    subtitle: '25 min',
+    subtitle: '30 min',
     category: 'cardio',
     difficulty: 'hard',
     calories: 300,
@@ -173,7 +173,7 @@ export const newWorkout = [
   {
     id: 'new-6',
     title: 'Relax & Recover Stretch',
-    subtitle: '12 min',
+    subtitle: '24 min',
     category: 'flexibility',
     difficulty: 'easy',
     calories: 60,

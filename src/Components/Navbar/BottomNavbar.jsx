@@ -69,6 +69,14 @@ const BottomNavbar = () => {
             <CustomTabIcon icon={bell} focused={focused} />
           ),
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: e => {
+            // Reset params when tab is pressed directly to avoid duplicate appointments
+            if (route.params?.appointmentDetails) {
+              navigation.setParams({ appointmentDetails: null });
+            }
+          },
+        })}
       />
       <Tab.Screen
         name="Profile"

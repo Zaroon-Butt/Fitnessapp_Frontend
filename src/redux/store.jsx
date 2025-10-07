@@ -28,7 +28,7 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-// Uncomment the line below temporarily to clear old notification state, then comment it back
+// Uncomment this line temporarily to clear old state, then comment it back
 // persistor.purge();
  
  

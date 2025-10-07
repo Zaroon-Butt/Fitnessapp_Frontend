@@ -19,7 +19,7 @@ const DumbbellIcon = ({ style }) => {
 const SplashScreen = () => {
   const dispatch = useDispatch();
 
-  dispatch(setIsLogin(false));
+  // dispatch(setIsLogin(false));
 
   return (
     <SafeAreaView style={styles.container}>

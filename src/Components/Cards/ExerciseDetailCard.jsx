@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import { WebView } from 'react-native-webview';
 import NextArrowButton from '../Buttons/NextArrowButton';
 
 const ExerciseDetailCard = ({ exercise, onPress }) => {
+    
   return (
     <TouchableOpacity onPress={onPress} style={styles.card}>
       <View style={styles.contentRow}>
@@ -12,7 +13,9 @@ const ExerciseDetailCard = ({ exercise, onPress }) => {
           style={styles.image}
           resizeMode="contain"
         />
-        <Text style={styles.title} numberOfLines={3}>
+      
+    {/* <Image source={{ uri: exercise.image.uri  }} style={styles.image} resizeMode="contain" />     */}
+    <Text style={styles.title} numberOfLines={3}>
           {exercise.title}
         </Text>
         <View style={styles.arrowContainer}>

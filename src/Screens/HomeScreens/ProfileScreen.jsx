@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProfilePicture } from '../../utils';
+import { launchImageLibrary } from 'react-native-image-picker';
 import BackButton from '../../Components/Buttons/BackButton';
 import { medium, regular, regular16 } from '../../utils/Style';
 import { useNavigation } from '@react-navigation/native';
@@ -21,6 +22,15 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const today = new Date().toLocaleDateString();
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImagePick = () => {
+    launchImageLibrary({ mediaType: 'photo' }, response => {
+      if (response.assets && response.assets.length > 0) {
+        setSelectedImage(response.assets[0].uri);
+      }
+    });
+  };
 
   const handleSignOut = () => {
     store.dispatch(logoutUser());
@@ -37,7 +47,12 @@ const ProfileScreen = () => {
 
       <View style={styles.profileSection}>
         <View style={styles.profileImageWrapper}>
-          <Image source={ProfilePicture} style={styles.profileImage} />
+          <TouchableOpacity onPress={handleImagePick}>
+            <Image
+              source={selectedImage ? { uri: selectedImage } : ProfilePicture}
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
           {useSelector(state => state.user.isPro) && (
             <View style={styles.proBadge}>
               <Text style={styles.proText}>PRO</Text>
