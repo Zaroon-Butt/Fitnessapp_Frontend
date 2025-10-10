@@ -104,7 +104,7 @@ const WeightInputScreen = () => {
   const [selectedWeight, setSelectedWeight] = useState(30);
   const [isLoading, setIsLoading] = useState(false);
   const { isLogin } = useSelector(state => state.user);
-  const { submitOnboarding, updateOnboarding } = useContext(ProvideContext);
+  const { submitOnboarding, updateOnboarding, completeUserProfile } = useContext(ProvideContext);
 
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
@@ -122,20 +122,24 @@ const WeightInputScreen = () => {
       // Update weight in onboarding context
       updateOnboarding({ weight: selectedWeight });
       
-      // Submit complete onboarding data to API
-      console.log('Submitting onboarding data to API...');
-      const response = await submitOnboarding({ weight: selectedWeight });
+      // Call completeProfile API instead of signup
+      console.log('Completing user profile...');
+      console.log("helloo before completeUserProfile");
       
-      console.log('API response:', response);
+      const response = await completeUserProfile({ weight: selectedWeight });
+
+      console.log("helloo after completeUserProfile");
       
-      // Extract user ID from response (adjust based on your backend response structure)
+      console.log('Profile completion response:', response);
+      
+      // Extract user ID from response 
       const userId = response.user?.id || response.user?._id || response.userId || response.id;
       
       if (userId) {
         dispatch(setUserId(userId));
-        console.log('User ID stored in Redux from signup:', userId);
+        console.log('User ID stored in Redux from profile completion:', userId);
       } else {
-        console.warn('No user ID found in signup response:', response);
+        console.warn('No user ID found in profile completion response:', response);
       }
       
       // Complete onboarding and set login state
@@ -146,9 +150,9 @@ const WeightInputScreen = () => {
       console.log('Redux dispatch completed successfully');
       console.log('=== WEIGHT SUBMISSION SUCCESS ===');
     } catch (error) {
-      console.log('Error during weight submission:', error);
-      setAlertTitle('Signup Failed');
-      setAlertMessage(error.message || 'An error occurred during signup');
+      console.log('Error during profile completion:', error);
+      setAlertTitle('Profile Completion Failed');
+      setAlertMessage(error.message || 'An error occurred while completing your profile');
       setAlertVisible(true);
       
       console.log('=== WEIGHT SUBMISSION COMPLETED WITH ERRORS ===');

@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react';
 import { AuthApi } from '../Api/AuthApi';
+import { ProfilePicture } from '../utils';
 
 export const ProvideContext = createContext();
 
@@ -12,6 +13,7 @@ export const ProvideProvider = ({ children }) => {
 	const [onboarding, setOnboarding] = useState({
         email: '',
         password: '',
+        token: '',
 		gender: '',
 		age: '',
 		height: '',
@@ -19,6 +21,7 @@ export const ProvideProvider = ({ children }) => {
 		activityLevel: '',
 		weight: '',
 		isPro: false,
+		ProfilePicture: '',
 	});
 
 	const updateOnboarding = (data) => {
@@ -61,43 +64,66 @@ export const ProvideProvider = ({ children }) => {
 			console.log('ProvideContext: Has googleId:', !!mergedData.googleId);
 			console.log('ProvideContext: Is Google auth:', isGoogleAuth);
 			
-			// Handle sign-up (both regular and Google) with unified approach
-			console.log('ProvideContext: Processing sign-up with unified approach');
-			const payload = { 
-				email: mergedData.email,
-				password: mergedData.password, // This will be the Google ID token for Google auth
-				Gender: mergedData.gender,
-				Age: parseInt(mergedData.age) || 0,
-				Height: parseInt(mergedData.height) || 0,
-				Goal: mergedData.goal,
-				ActivityLevel: mergedData.activityLevel,
-				Weight: parseInt(mergedData.weight) || 0,
-				isPro: mergedData.isPro || false,
-			};
+			let data;
 			
-			console.log('ProvideContext: Prepared signup payload:');
-			console.log('ProvideContext: Email:', payload.email);
-			console.log('ProvideContext: Password length:', payload.password ? payload.password.length : 0);
-			console.log('ProvideContext: Password type (Google ID token or regular):', isGoogleAuth ? 'Google ID Token' : 'Regular Password');
-			console.log('ProvideContext: Gender:', payload.Gender);
-			console.log('ProvideContext: Age:', payload.Age);
-			console.log('ProvideContext: Height:', payload.Height);
-			console.log('ProvideContext: Goal:', payload.Goal);
-			console.log('ProvideContext: ActivityLevel:', payload.ActivityLevel);
-			console.log('ProvideContext: Weight:', payload.Weight);
-			console.log('ProvideContext: isPro:', payload.isPro);
-			console.log('ProvideContext: Full payload:', JSON.stringify(payload, null, 2));
-			
-			const requiredFields = ['email', 'password', 'Gender', 'Age', 'Height', 'Goal', 'ActivityLevel', 'Weight'];
-			const missingFields = requiredFields.filter(field => !payload[field] && payload[field] !== 0);
-			if (missingFields.length > 0) {
-				console.log('ProvideContext: ERROR - Missing required fields:', missingFields);
-				throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+			if (isGoogleAuth) {
+				// Handle Google sign-up
+				console.log('ProvideContext: Processing Google sign-up');
+				const googlePayload = {
+					email: mergedData.email,
+					googleId: mergedData.googleId,
+					name: mergedData.name,
+					Gender: mergedData.gender,
+					Age: parseInt(mergedData.age) || 0,
+					Height: parseInt(mergedData.height) || 0,
+					Goal: mergedData.goal,
+					ActivityLevel: mergedData.activityLevel,
+					Weight: parseInt(mergedData.weight) || 0,
+					ProfilePicture: mergedData.ProfilePicture || ''
+				};
+				
+				console.log('ProvideContext: Prepared Google signup payload:', JSON.stringify(googlePayload, null, 2));
+				
+				const requiredGoogleFields = ['email', 'googleId', 'Gender', 'Age', 'Height', 'Goal', 'ActivityLevel', 'Weight'];
+				const missingGoogleFields = requiredGoogleFields.filter(field => !googlePayload[field] && googlePayload[field] !== 0);
+				if (missingGoogleFields.length > 0) {
+					console.log('ProvideContext: ERROR - Missing required Google fields:', missingGoogleFields);
+					throw new Error(`Missing required fields for Google sign-up: ${missingGoogleFields.join(', ')}`);
+				}
+				
+				console.log('ProvideContext: All required Google fields present, calling AuthApi.googleSignUp...');
+				data = await AuthApi.googleSignUp({ userInfo: { user: { id: googlePayload.googleId, email: googlePayload.email, name: googlePayload.name } }, ...googlePayload });
+				console.log('ProvideContext: AuthApi.googleSignUp completed successfully');
+			} else {
+				// Handle regular email/password sign-up
+				console.log('ProvideContext: Processing regular sign-up');
+				const payload = { 
+					email: mergedData.email,
+					password: mergedData.password, // This will be the Google ID token for Google auth
+					gender: mergedData.gender,
+					Age: parseInt(mergedData.age) || 0,
+					Height: parseInt(mergedData.height) || 0,
+					Goal: mergedData.goal,
+					ActivityLevel: mergedData.activityLevel,
+					Weight: parseInt(mergedData.weight) || 0,
+					isPro: mergedData.isPro || false,
+					ProfilePicture: mergedData.ProfilePicture || ''
+				};
+				
+				console.log('ProvideContext: Prepared regular signup payload:', JSON.stringify(payload, null, 2));
+				
+				// For regular sign-up, only email & password are required at this step; profile is completed later.
+				const requiredFields = ['email', 'password'];
+				const missingFields = requiredFields.filter(field => !payload[field] && payload[field] !== 0);
+				if (missingFields.length > 0) {
+					console.log('ProvideContext: ERROR - Missing required fields:', missingFields);
+					throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+				}
+				
+				console.log('ProvideContext: All required fields present, calling AuthApi.signUp...');
+				data = await AuthApi.signUp(payload);
+				console.log('ProvideContext: AuthApi.signUp completed successfully');
 			}
-			
-			console.log('ProvideContext: All required fields present, calling AuthApi.signUp...');
-			const data = await AuthApi.signUp(payload);
-			console.log('ProvideContext: AuthApi.signUp completed successfully');
 			setUser(data.user || data);
 			// Log user id and isPro after sign up
 			const userData = data.user || data;
@@ -178,6 +204,7 @@ export const ProvideProvider = ({ children }) => {
 	// Google Sign-Up (for new users with onboarding data)
 	const googleSignUp = async (userData) => {
 		console.log('=== ProvideContext.googleSignUp STARTED ===');
+		console.log(userData,"==================3249233------=================");
 		setIsLoading(true);
 		setError(null);
 		try {
@@ -195,12 +222,76 @@ export const ProvideProvider = ({ children }) => {
 		}
 	};
 
+	// Complete user profile after email verification (email/password flow only)
+	const completeUserProfile = async (extra = {}) => {
+		console.log('=== ProvideContext.completeUserProfile STARTED ===');
+		setIsLoading(true);
+		setError(null);
+		try {
+			// Merge extra data with onboarding data
+			const mergedData = { ...onboarding, ...extra };
+			console.log('ProvideContext: Completing profile with data:', JSON.stringify(mergedData, null, 2));
+
+			// If user is using Google auth, finalize via googleSignUp endpoint (creates/updates user in DB)
+			if (mergedData.authProvider === 'google' || mergedData.googleId) {
+				console.log('ProvideContext: Completing Google user via googleSignUp');
+				const googlePayload = {
+					userInfo: { user: { id: mergedData.googleId, email: mergedData.email, name: mergedData.name } },
+					email: mergedData.email,
+					password:mergedData.googleId, // Use Google ID as password placeholder
+					googleId: mergedData.googleId,
+					name: mergedData.name,
+					Gender: mergedData.gender,
+					Age: parseInt(mergedData.age) || 0,
+					Height: parseInt(mergedData.height) || 0,
+					Goal: mergedData.goal,
+					ActivityLevel: mergedData.activityLevel,
+					Weight: parseInt(mergedData.weight) || 0,
+					ProfilePicture: mergedData.ProfilePicture || ''
+				};
+				const data = await AuthApi.googleSignUp(googlePayload);
+				setUser(data.user || data);
+				setIsLoading(false);
+				console.log('ProvideContext: Google user creation/update completed');
+				return data;
+			}
+			
+			// Prepare payload for completeProfile API
+			const payload = {
+				token: mergedData.token || '', // Token from email verification
+				Gender: mergedData.gender,
+				Age: parseInt(mergedData.age) || 0,
+				Height: parseInt(mergedData.height) || 0,
+				Goal: mergedData.goal,
+				ActivityLevel: mergedData.activityLevel,
+				Weight: parseInt(mergedData.weight) || 0,
+			};
+			
+			console.log('ProvideContext: Profile completion payload:', JSON.stringify(payload, null, 2));
+			
+			const data = await AuthApi.completeProfile(payload);
+			setUser(data.user || data);
+			console.log('ProvideContext: Profile completion successful');
+			setIsLoading(false);
+			console.log('=== ProvideContext.completeUserProfile COMPLETED SUCCESSFULLY ===');
+			return data;
+		} catch (err) {
+			console.log('=== ProvideContext.completeUserProfile ERROR ===');
+			console.log('ProvideContext: Error in completeUserProfile:', err);
+			console.log('ProvideContext: Error message:', err.message);
+			setError(err.message);
+			setIsLoading(false);
+			throw err;
+		}
+	};
+
 	// Logout user (clear state)
 	const logout = () => {
 		setUser(null);
 		setOnboarding({
 			email: '',
 			password: '',
+			token: '',
 			gender: '',
 			age: '',
 			height: '',
@@ -225,6 +316,7 @@ export const ProvideProvider = ({ children }) => {
 				login,
 				googleSignIn,
 				googleSignUp,
+				completeUserProfile,
 				logout,
 				setUser,
 			}}

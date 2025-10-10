@@ -40,10 +40,7 @@ export default function SignUp() {
   const handleGoogleSignUp = async () => {
     try {
       setIsLoading(true);
-      
-      // Get user info using the GoogleLogin utility
       const userInfo = await GoogleLogin();
-      
       console.log('Google sign-up userInfo:', JSON.stringify(userInfo, null, 2));
       
       // Check if userInfo and user property exist - handle both direct user and data.user structures
@@ -136,48 +133,43 @@ export default function SignUp() {
   const handleSignUp = async values => {
     try {
       setIsLoading(true);
+      
+      // Check if email already exists
       const emailCheck = await checkEmail(values.email);
       if (emailCheck.exists) {
         setAlertTitle('Email Exists');
         setAlertMessage('This email is already registered');
         setAlertVisible(true);
         setIsLoading(false);
-        return; // Stop here if email exists
+        return;
       }
 
-      // Call the EmailOtp API to send verification email
-      // try {
-      //   const otpResponse = await AuthApi.EmailOtp(values.email);
-      //   console.log('OTP sent successfully:', otpResponse);
-        
-        // // If OTP sent successfully, update onboarding data
-        updateOnboarding({
-          email: values.email,
-          password: values.password,
-        });
+      // Call the signup API to register user and send OTP
+      const signupResponse = await AuthApi.signUp({
+        email: values.email,
+        password: values.password
+      });
+      
+      console.log('Signup successful:', signupResponse);
+      
+      // Update onboarding data with email and password
+      updateOnboarding({
+        email: values.email,
+        password: values.password,
+      });
 
-        // Set username in Redux to the part before '@'
-        const username = values.email.split('@')[0].replace(/[0-9]/g, '');
-        dispatch(setIsUsername(username));
+      // Set username in Redux to the part before '@'
+      const username = values.email.split('@')[0].replace(/[0-9]/g, '');
+      dispatch(setIsUsername(username));
 
-        // Show success message
-        // setAlertTitle('Verification Email Sent');
-        // setAlertMessage('Please check your email for a verification code');
-        // setAlertVisible(true);
-        
-        setIsLoading(false);
-        navigation.navigate('GenderScreen'); // Only navigates if email does not exist
-      // } catch (otpError) {
-      //   setIsLoading(false);
-      //   setAlertTitle('Verification Failed');
-      //   setAlertMessage(otpError.message || 'Failed to send verification email');
-      //   setAlertVisible(true);
-      //   return;
-      // }
+      // Navigate to OTP verification screen
+      setIsLoading(false);
+      navigation.navigate('EmailOtpScreen', { email: values.email });
+      
     } catch (error) {
       setIsLoading(false);
-      setAlertTitle('Error');
-      setAlertMessage(error.message || 'An error occurred while checking email');
+      setAlertTitle('Signup Failed');
+      setAlertMessage(error.message || 'An error occurred during signup');
       setAlertVisible(true);
     }
   };

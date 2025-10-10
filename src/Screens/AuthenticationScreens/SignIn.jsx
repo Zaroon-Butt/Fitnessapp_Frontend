@@ -86,10 +86,11 @@ export default function SignIn() {
       
       console.log('GoogleSignIn: ID Token available:', idToken ? 'Yes' : 'No');
       
-      // Call the regular sign-in API with email and ID token as password
-      const response = await AuthApi.signIn({
+      // Authenticate with backend using Google credentials (no re-prompt)
+      const response = await AuthApi.googleSignIn({
         email: userEmail,
-        password: idToken // Use Google ID token as password
+        googleId: googleUserId,
+        idToken,
       });
 
     
